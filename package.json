@@ -6,14 +6,35 @@
     "build-web": "react-scripts build"
   },
   "dependencies": {
-    "expo": "^28.0.0",
-    "react": "16.3.1",
-    "react-art": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-28.0.0.tar.gz",
-    "react-native-web": "^0.8.9",
-    "react-router-dom": "^4.3.1",
-    "react-router-native": "^4.3.0",
-    "react-scripts": "^1.1.4"
+    "expo": "^34.0.1",
+    "react": "16.8.3",
+    "react-art": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
+    "react-native-elements": "^1.1.0",
+    "react-native-vector-icons": "^6.6.0",
+    "react-native-web": "^0.11.4",
+    "react-router-dom": "^5.0.1",
+    "react-router-native": "^5.0.1",
+    "react-scripts": "^3.1.1",
+    "aws-amplify": "^1.1.28"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "^6.0.0",
+    "babel-jest": "24.8.0",
+    "jest": "24.8.0",
+    "jest-expo": "^25.1.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
