@@ -1,0 +1,16 @@
+projects:
+  cure8API:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+        graphQLApiId: yzmmgl6t4nenrkir5v5hebf2ni
+      endpoints:
+        prod: >-
+          https://rvvwibgng5ghloi4uqxs2u3gga.appsync-api.us-east-2.amazonaws.com/graphql

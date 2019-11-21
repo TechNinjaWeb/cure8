@@ -1,0 +1,14 @@
+{
+    "macos": {
+        "awscloudformation": {
+            "AuthRoleName": "cure8hybrid-20191106203250-authRole",
+            "UnauthRoleArn": "arn:aws:iam::103831773854:role/cure8hybrid-20191106203250-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::103831773854:role/cure8hybrid-20191106203250-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "cure8hybrid-20191106203250-deployment",
+            "UnauthRoleName": "cure8hybrid-20191106203250-unauthRole",
+            "StackName": "cure8hybrid-20191106203250",
+            "StackId": "arn:aws:cloudformation:us-east-2:103831773854:stack/cure8hybrid-20191106203250/834aec00-00fe-11ea-a594-0ad7a569cb8c"
+        }
+    }
+}
