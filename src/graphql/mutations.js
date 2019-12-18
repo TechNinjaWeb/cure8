@@ -1,26 +1,29 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const createBook = `mutation CreateBook($input: CreateBookInput!) {
-  createBook(input: $input) {
+export const createUsers = `mutation CreateUsers($input: CreateUsersInput!) {
+  createUsers(input: $input) {
     id
-    title
+    email
+    friends
     author
   }
 }
 `;
-export const updateBook = `mutation UpdateBook($input: UpdateBookInput!) {
-  updateBook(input: $input) {
+export const updateUsers = `mutation UpdateUsers($input: UpdateUsersInput!) {
+  updateUsers(input: $input) {
     id
-    title
+    email
+    friends
     author
   }
 }
 `;
-export const deleteBook = `mutation DeleteBook($input: DeleteBookInput!) {
-  deleteBook(input: $input) {
+export const deleteUsers = `mutation DeleteUsers($input: DeleteUsersInput!) {
+  deleteUsers(input: $input) {
     id
-    title
+    email
+    friends
     author
   }
 }

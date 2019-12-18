@@ -1,26 +1,29 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const onCreateBook = `subscription OnCreateBook {
-  onCreateBook {
+export const onCreateUsers = `subscription OnCreateUsers {
+  onCreateUsers {
     id
-    title
+    email
+    friends
     author
   }
 }
 `;
-export const onUpdateBook = `subscription OnUpdateBook {
-  onUpdateBook {
+export const onUpdateUsers = `subscription OnUpdateUsers {
+  onUpdateUsers {
     id
-    title
+    email
+    friends
     author
   }
 }
 `;
-export const onDeleteBook = `subscription OnDeleteBook {
-  onDeleteBook {
+export const onDeleteUsers = `subscription OnDeleteUsers {
+  onDeleteUsers {
     id
-    title
+    email
+    friends
     author
   }
 }

@@ -1,5 +1,6 @@
 type Users @model {
       id: ID!
-      friend: String!
+      email: String
+      friends: String!
       author: String
     }

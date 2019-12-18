@@ -1,23 +1,26 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const getBook = `query GetBook($id: ID!) {
-  getBook(id: $id) {
+export const getUsers = `query GetUsers($id: ID!) {
+  getUsers(id: $id) {
     id
-    title
+    email
+    friends
     author
   }
 }
 `;
-export const listBooks = `query ListBooks(
-  $filter: ModelBookFilterInput
+
+export const listUserss = `query ListUserss(
+  $filter: ModelUsersFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listBooks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listUserss(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      title
+      email
+      friends
       author
     }
     nextToken

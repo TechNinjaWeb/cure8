@@ -42,6 +42,9 @@ import { WebBrowser } from 'expo';
 import { Auth } from "aws-amplify";
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from "react-native-vector-icons/FontAwesome";
+import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
+const poolData = {UserPoolId: "us-east-2_pgBKXdJOH", ClientId: "50i0qg409uni58jng27v826sfh"};
+const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
 
 
@@ -61,7 +64,7 @@ export default class Home extends React.Component {
         this.state = {
             username: '',
             password: '',
-
+            id: ''
         };
 
     }
@@ -77,8 +80,36 @@ export default class Home extends React.Component {
             //alert(this.state.authenticated)
 
             alert("Successful login");
+            //
+            try {
+                var userID = "d"
+                const cognitoUser = userPool.getCurrentUser();
+                if (cognitoUser != null) {
+                    cognitoUser.getSession((err, session) => {
+                        if (err) {
+                            console.log(err);
+                        } else if (!session.isValid()) {
+                            console.log("Invalid session.");
+                        } else {
+                            console.log("IdToken: " + session.getIdToken().getJwtToken());
+                            const getUserAttributes = cognitoUser.getUserAttributes(err);
+                            Auth.currentUserInfo().then((userInfo) => {
+                                userID = userInfo.attributes.sub;
+                                console.log("is it allright?"+userID)
+                                this.props.selectID(userID)
+                            })
+                        }
+                    });
+                    console.log("finally "+userID);
+                } else {
+                    console.log("User not found.");
+                }
+            } catch (err) {
+                console.log('error: ', err);
+            }
+            //
+            //this.props.history.push("/test");
             this.props.history.push("/dashboard");
-
         } catch (e) {
             alert(e.message);
             this.props.userHasAuthenticated(true) //!!

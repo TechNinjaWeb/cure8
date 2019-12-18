@@ -5,11 +5,13 @@ import Home from './Home';
 import Pokemon from './Pokemon';
 import Dashboard from "./Dashboard";
 import SignUp from "./SignUp";
+import TestAmplify from "./testAmplify";
 import { AppLoading} from 'expo';
 import {Asset} from "expo-asset";
 import * as Font from "expo-font";
 import Amplify from '@aws-amplify/core'
 import config from './config'
+import Friends from "./Friends";
 Amplify.configure({ Auth: {
     mandatorySignIn: true,
     region: config.cognito.REGION,
@@ -22,7 +24,7 @@ export default class App extends React.Component {
     selectedPokemon: null,
     isLoadingComplete: false,
     isAuthenticated: false,
-
+    id:null
   };
 
 
@@ -34,16 +36,17 @@ export default class App extends React.Component {
   userHasAuthenticated = authenticated => {
     this.setState({ isAuthenticated: authenticated });
   }
-
-  handleLogout = async event => {
-    await Auth.signOut();
-    this.userHasAuthenticated(false);
-    this.props.history.push("/home");
+  returnUserId(){
+     return this.state.id
+   }
+  selectID = id => {
+        this.setState({ id });
   }
+
+
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
-
           <AppLoading
               startAsync={this._loadResourcesAsync}
               onError={this._handleLoadingError}
@@ -60,7 +63,7 @@ export default class App extends React.Component {
                     exact
                     path="/"
                     render={props => (
-                        <Home {...props} selectPokemon={this.selectPokemon} userHasAuthenticated={this.userHasAuthenticated} isAuthenticated={this.state.isAuthenticated}/>
+                        <Home {...props} selectPokemon={this.selectPokemon} userHasAuthenticated={this.userHasAuthenticated} returnUserId={this.returnUserId} selectID={this.selectID} isAuthenticated={this.state.isAuthenticated} />
                     )}
                 />
                 <Route
@@ -86,13 +89,36 @@ export default class App extends React.Component {
                     path="/dashboard"
                     render={props => (
                         this.state.isAuthenticated === true
-                            ?<Dashboard {...props} userHasAuthenticated={this.userHasAuthenticated}
+                            ?<Dashboard {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id}
 
                             />
                             :alert(this.state.authenticated)
 
                     )}
                 />
+                <Route
+                    path="/test"
+                    render={props => (
+                        this.state.isAuthenticated === true
+                            ?<TestAmplify {...props} userHasAuthenticated={this.userHasAuthenticated}
+
+                            />
+                            :alert(this.state.authenticated)
+
+                    )}
+                />
+                  <Route
+                      path="/friends"
+                      render={props => (
+                          this.state.isAuthenticated === true
+                              ?<Friends {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id}
+
+                              />
+                              :alert(this.state.authenticated)
+
+                      )}
+                  />
+
               </Switch>
             </Router>
 

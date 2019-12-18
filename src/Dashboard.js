@@ -54,7 +54,11 @@ export default class DashBoard extends React.Component {
         this.props.userHasAuthenticated(false)
         this.props.history.push("/");
     }
+    showFriends = async event => {
+        this.props.history.push("/friends");
+    }
     render() {
+        console.log("debug in dashbaord "+this.props.id)
         const { search } = this.state;
         if(Platform.OS != 'ios') {
             //alert(Platform.OS)
@@ -125,16 +129,14 @@ export default class DashBoard extends React.Component {
                         />
                         <View style={styles.buttonContainer}>
                             <View style={{ flexDirection: 'column', marginRight: 80}}>
-                        <Button
-                              title={<View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                  <Text style={{fontSize:45,paddingHorizontal:0 }}>  👯‍♀      </Text>
-                                  <Text style={{fontSize:30, fontFamily:"Monaco",  }}>My Friends</Text>
-                              </View>}
-
-                              titleStyle={{color:"rgba(140, 140, 140, 1.0)",fontSize:25,textAlign:"left", }}//this works textAlignVertical:"top"
-
-
-                                buttonStyle={{
+                                <Button
+                                  title={<View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                      <Text style={{fontSize:45,paddingHorizontal:0 }}>  👯‍♀      </Text>
+                                      <Text style={{fontSize:30, fontFamily:"Monaco",  }}>My Friends</Text>
+                                  </View>}
+                                  onPress={this.showFriends.bind(this)}
+                                  titleStyle={{color:"rgba(140, 140, 140, 1.0)",fontSize:25,textAlign:"left", }}//this works textAlignVertical:"top
+                                  buttonStyle={{
                                     backgroundColor: "rgba(255, 255,255,1)",
                                     borderRadius: 20,
                                     width: 440,
@@ -146,8 +148,8 @@ export default class DashBoard extends React.Component {
                                     marginBottom: 21,
                                     justifyContent:"left"
 
-                                }}
-                            />
+                                  }}
+                                />
                                 <Button
                                     title={<View style={{flexDirection: 'row', alignItems: 'center'}}>
                                         <Text style={{fontSize:45,paddingHorizontal:0 }}>  👯‍♀      </Text>

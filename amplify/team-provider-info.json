@@ -9,6 +9,11 @@
             "UnauthRoleName": "cure8hybrid-20191106203250-unauthRole",
             "StackName": "cure8hybrid-20191106203250",
             "StackId": "arn:aws:cloudformation:us-east-2:103831773854:stack/cure8hybrid-20191106203250/834aec00-00fe-11ea-a594-0ad7a569cb8c"
+        },
+        "categories": {
+            "auth": {
+                "cognito82c87ba8": {}
+            }
         }
     }
 }
