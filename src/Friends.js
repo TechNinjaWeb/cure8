@@ -9,17 +9,24 @@ import { API, graphqlOperation } from 'aws-amplify';
 import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 const poolData = {UserPoolId: "us-east-2_pgBKXdJOH", ClientId: "50i0qg409uni58jng27v826sfh"};
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-
+import { GraphQLSchema } from 'graphql';
 
 
 const ListUsers = `
      query GetUsers($id: ID!) {
        getUsers(id: $id) {
-         id
-   
+         friends: [ID]
   }
 }
     `;
+
+const TodoType = new GraphQLObjectType({
+    name: 'Todo',
+    fields: () => ({
+        id: { type: GraphQLID },
+        friends: { type: GraphQLString },
+    })
+});
 
 const AddUser = `
     mutation ($friend: String! $author: String) {
@@ -40,10 +47,13 @@ export default class Friends extends React.Component {
     async componentDidMount() {
 
                 const params = { id: this.props.id };
-                const books = await API.graphql(graphqlOperation(ListUsers,params));
+                //const books = await API.graphql(graphqlOperation(ListUsers,params));
+               const books = await API.graphql(graphqlOperation(ListUsers,params));
                 console.log('books: ', books);
-                this.setState({ books: Array.from(books.data.getUsers)});
+                //this.setState({ books: Array.from(books.data.getUsers.friends)});
+                this.setState({ books: books.data.getUsers.friends[0]});
                 console.log(this.state.books);
+
 
 
     }
