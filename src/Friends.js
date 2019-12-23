@@ -9,24 +9,26 @@ import { API, graphqlOperation } from 'aws-amplify';
 import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 const poolData = {UserPoolId: "us-east-2_pgBKXdJOH", ClientId: "50i0qg409uni58jng27v826sfh"};
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-import { GraphQLSchema } from 'graphql';
 
+//import {graphql, GraphQLID, GraphQLObjectType, GraphQLString} from "../node_modules/graphql/type";
+//import {graphql,GraphQLSchema,GraphQLObjectType,GraphQLString,} from '../node_modules/graphql';
+//var {graphql, GraphQLID, GraphQLString, GraphQLObjectType } = require('../node_modules/graphql/type');
 
 const ListUsers = `
      query GetUsers($id: ID!) {
        getUsers(id: $id) {
-         friends: [ID]
+         friends
   }
 }
     `;
 
-const TodoType = new GraphQLObjectType({
-    name: 'Todo',
+/*const TodoType = new GraphQLObjectType({
+    name: 'getUsers',
     fields: () => ({
-        id: { type: GraphQLID },
+       // id: { type: GraphQLID },
         friends: { type: GraphQLString },
     })
-});
+});*/
 
 const AddUser = `
     mutation ($friend: String! $author: String) {
@@ -38,6 +40,7 @@ const AddUser = `
       }
     }
     `;
+
 export default class Friends extends React.Component {
     state = {
         friend: '',
@@ -47,11 +50,11 @@ export default class Friends extends React.Component {
     async componentDidMount() {
 
                 const params = { id: this.props.id };
-                //const books = await API.graphql(graphqlOperation(ListUsers,params));
-               const books = await API.graphql(graphqlOperation(ListUsers,params));
+                const books = await API.graphql(graphqlOperation(ListUsers,params));
+                //const books = await API.graphql(graphqlOperation(TodoType,params));
                 console.log('books: ', books);
-                //this.setState({ books: Array.from(books.data.getUsers.friends)});
-                this.setState({ books: books.data.getUsers.friends[0]});
+                this.setState({ books: Array.from(books.data.getUsers.friends)});
+                //this.setState({ books: books.data.getUsers.friends[0]});
                 console.log(this.state.books);
 
 

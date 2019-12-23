@@ -20,9 +20,9 @@ exports.handler = async (event, context) => {
       Item: {
          'id': {S: event.request.userAttributes.sub},
         'email': {S: event.request.userAttributes.email},
-        'friends': {S:"example@example.com"},
-        'friendRequests': {S:"none"},
-         'leagues': {S:"starter"}
+        'friends': {L:[  {S : "No friends yet" }]},
+        'friendRequests': {L:[  {S : "No friend requests yet" }]},
+         'leagues': {L:[  {S : "You are not part of any league" }]}
 
       },
       TableName: tableName

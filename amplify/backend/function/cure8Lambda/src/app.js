@@ -12,7 +12,10 @@ var express = require('express')
 
 AWS.config.update({ region: process.env.TABLE_REGION });
 
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+//const dynamodb = new AWS.DynamoDB.DocumentClient();
+const dynamodb = new AWS.DynamoDB.DocumentClient( {
+  convertEmptyValues: true
+} );
 
 let tableName = "cure8Dynamo";
 if(process.env.ENV && process.env.ENV !== "NONE") {
