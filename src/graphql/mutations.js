@@ -15,7 +15,7 @@ export const updateUsers = `mutation UpdateUsers($input: UpdateUsersInput!) {
     id
     email
     friends
-    author
+    friendRequests
   }
 }
 `;

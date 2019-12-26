@@ -10,9 +10,6 @@ import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 const poolData = {UserPoolId: "us-east-2_pgBKXdJOH", ClientId: "50i0qg409uni58jng27v826sfh"};
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-//import {graphql, GraphQLID, GraphQLObjectType, GraphQLString} from "../node_modules/graphql/type";
-//import {graphql,GraphQLSchema,GraphQLObjectType,GraphQLString,} from '../node_modules/graphql';
-//var {graphql, GraphQLID, GraphQLString, GraphQLObjectType } = require('../node_modules/graphql/type');
 
 const ListUsers = `
      query GetUsers($id: ID!) {
@@ -22,14 +19,26 @@ const ListUsers = `
 }
     `;
 
-/*const TodoType = new GraphQLObjectType({
-    name: 'getUsers',
-    fields: () => ({
-       // id: { type: GraphQLID },
-        friends: { type: GraphQLString },
-    })
-});*/
+const RequestFriend = `
+    mutation ($friendRequests: String!) {
+      updateUsers(input: {
+      friendRequests: $friendRequests
+      }) {
+        friendRequests
+      }
+    }
+    `;
+const RequestFriend2 = `
+    mutation ($friendRequests: String!, $id: ID!){
 
+     updateUsers(input: {
+        friendRequests: $friendRequests,
+        id: $id
+     }) {
+        friendRequests
+     }
+    }
+    `;
 const AddUser = `
     mutation ($friend: String! $author: String) {
       createUsers(input: {
@@ -51,10 +60,8 @@ export default class Friends extends React.Component {
 
                 const params = { id: this.props.id };
                 const books = await API.graphql(graphqlOperation(ListUsers,params));
-                //const books = await API.graphql(graphqlOperation(TodoType,params));
                 console.log('books: ', books);
                 this.setState({ books: Array.from(books.data.getUsers.friends)});
-                //this.setState({ books: books.data.getUsers.friends[0]});
                 console.log(this.state.books);
 
 
@@ -64,13 +71,14 @@ export default class Friends extends React.Component {
         this.setState({ [key]: val });
     };
     addBook = async () => {
-        if (this.state.friend === '' || this.state.author === '') return;
-        const book = { friend: this.state.friend, author: this.state.author };
+        if (this.state.friend === '') return;
+        const book = { friend: this.state.friend };
         try {
-            const books = [...this.state.books, book];
+            /*const books = [...this.state.friend, book];
             this.setState({ books, friend: '', author: '' });
-            console.log('books: ', books);
-            await API.graphql(graphqlOperation(AddUser, book));
+            console.log('books: ', books);*/
+            const params = {friendRequests:this.state.friend ,id: this.props.id };
+            await API.graphql(graphqlOperation(RequestFriend2, params));
             console.log('success');
         } catch (err) {
             console.log('error: ', err);
@@ -83,13 +91,7 @@ export default class Friends extends React.Component {
                     style={styles.input}
                     value={this.state.friend}
                     onChangeText={val => this.onChangeText('friend', val)}
-                    placeholder="What do you want to read?"
-                />
-                <TextInput
-                    style={styles.input}
-                    value={this.state.author}
-                    onChangeText={val => this.onChangeText('author', val)}
-                    placeholder="Who wrote it?"
+                    placeholder="Add a friend"
                 />
                 <Button onPress={this.addBook} friend="Add to friends list" color="#eeaa55" />
                 {this.state.books.map((book, index) => (
