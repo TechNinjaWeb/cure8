@@ -58,7 +58,7 @@ export default class DashBoard extends React.Component {
         this.props.history.push("/friends");
     }
     render() {
-        console.log("debug in dashbaord "+this.props.id)
+        console.log("debug in dashbaord "+this.props.id+"    "+this.props.email)
         const { search } = this.state;
         if(Platform.OS != 'ios') {
             //alert(Platform.OS)

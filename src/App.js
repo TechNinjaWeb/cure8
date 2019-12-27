@@ -24,7 +24,8 @@ export default class App extends React.Component {
     selectedPokemon: null,
     isLoadingComplete: false,
     isAuthenticated: false,
-    id:null
+    id:null,
+      email: null
   };
 
 
@@ -41,6 +42,9 @@ export default class App extends React.Component {
    }
   selectID = id => {
         this.setState({ id });
+  }
+  selectEmail= email => {
+        this.setState({ email });
   }
 
 
@@ -63,7 +67,7 @@ export default class App extends React.Component {
                     exact
                     path="/"
                     render={props => (
-                        <Home {...props} selectPokemon={this.selectPokemon} userHasAuthenticated={this.userHasAuthenticated} returnUserId={this.returnUserId} selectID={this.selectID} isAuthenticated={this.state.isAuthenticated} />
+                        <Home {...props} selectPokemon={this.selectPokemon} userHasAuthenticated={this.userHasAuthenticated} returnUserId={this.returnUserId} selectID={this.selectID} selectEmail={this.selectEmail} isAuthenticated={this.state.isAuthenticated} />
                     )}
                 />
                 <Route
@@ -89,7 +93,7 @@ export default class App extends React.Component {
                     path="/dashboard"
                     render={props => (
                         this.state.isAuthenticated === true
-                            ?<Dashboard {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id}
+                            ?<Dashboard {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id} email={this.state.email}
 
                             />
                             :alert(this.state.authenticated)
@@ -111,7 +115,7 @@ export default class App extends React.Component {
                       path="/friends"
                       render={props => (
                           this.state.isAuthenticated === true
-                              ?<Friends {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id}
+                              ?<Friends {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id} email={this.state.email}
 
                               />
                               :alert(this.state.authenticated)

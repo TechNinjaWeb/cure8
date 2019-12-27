@@ -83,6 +83,7 @@ export default class Home extends React.Component {
             //
             try {
                 var userID = "d"
+                var userEmail = "f"
                 const cognitoUser = userPool.getCurrentUser();
                 if (cognitoUser != null) {
                     cognitoUser.getSession((err, session) => {
@@ -97,6 +98,10 @@ export default class Home extends React.Component {
                                 userID = userInfo.attributes.sub;
                                 console.log("is it allright?"+userID)
                                 this.props.selectID(userID)
+                                userEmail = userInfo.attributes.email
+                                console.log("is it allright?"+userEmail)
+                                this.props.selectEmail(userEmail)
+
                             })
                         }
                     });
