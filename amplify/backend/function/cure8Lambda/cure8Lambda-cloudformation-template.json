@@ -12,6 +12,18 @@
 		"storagecure8DynamoArn": {
 			"Type": "String",
 			"Default": "storagecure8DynamoArn"
+		},
+		"storageUsersIDName": {
+			"Type": "String",
+			"Default": "storageUsersIDName"
+		},
+		"storageUsersIDArn": {
+			"Type": "String",
+			"Default": "storageUsersIDArn"
+		},
+		"storageUsersIDStreamArn": {
+			"Type": "String",
+			"Default": "storageUsersIDArn"
 		}
 	},
 	"Conditions": {
@@ -64,11 +76,11 @@
 						"Arn"
 					]
 				},
-				"Runtime": "nodejs8.10",
+				"Runtime": "nodejs10.x",
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "cure8hybrid-20191106203250-deployment",
-					"S3Key": "amplify-builds/cure8Lambda-1577079498-latest-build.zip"
+					"S3Key": "amplify-builds/cure8Lambda-63624139566d4a4d4b75-build.zip"
 				}
 			}
 		},
@@ -168,6 +180,59 @@
 						}
 					]
 				}
+			}
+		},
+		"UsersIDTriggerPolicy": {
+			"DependsOn": [
+				"LambdaExecutionRole"
+			],
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "lambda-trigger-policy",
+				"Roles": [
+					{
+						"Ref": "LambdaExecutionRole"
+					}
+				],
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Action": [
+								"dynamodb:DescribeStream",
+								"dynamodb:GetRecords",
+								"dynamodb:GetShardIterator",
+								"dynamodb:ListStreams"
+							],
+							"Resource": [
+								{
+									"Ref": "storageUsersIDStreamArn"
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		"UsersIDTrigger": {
+			"Type": "AWS::Lambda::EventSourceMapping",
+			"DependsOn": [
+				"UsersIDTriggerPolicy"
+			],
+			"Properties": {
+				"BatchSize": 100,
+				"Enabled": true,
+				"EventSourceArn": {
+					"Ref": "storageUsersIDStreamArn"
+				},
+				"FunctionName": {
+					"Fn::GetAtt": [
+						"LambdaFunction",
+						"Arn"
+					]
+				},
+				"StartingPosition": "LATEST"
 			}
 		}
 	},

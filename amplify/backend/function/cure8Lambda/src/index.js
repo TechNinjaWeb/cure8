@@ -6,7 +6,7 @@ exports.handler = async (event, context) => {
 
   let date = new Date();
 
-  const tableName = "Users-yzmmgl6t4nenrkir5v5hebf2ni-macos";
+  const tableName = "UsersByID-macos";
   const region = process.env.REGION;
   console.log("table=" + tableName + " -- region=" + region);
 

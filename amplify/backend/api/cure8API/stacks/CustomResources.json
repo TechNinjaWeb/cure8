@@ -27,9 +27,81 @@
 		}
 	},
 	"Resources": {
-		"EmptyResource": {
-			"Type": "Custom::EmptyResource",
-			"Condition": "AlwaysFalse"
+		"QueryGetUsersResolver": {
+			"Type": "AWS::AppSync::Resolver",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"TypeName": "Query",
+				"FieldName": "getUsers",
+
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.getUsers.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.getUsers.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+			},
+		"QueryGetUsersByEmailResolver": {
+			"Type": "AWS::AppSync::Resolver",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"TypeName": "Query",
+				"FieldName": "getUsersByEmail",
+
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.getUsersByEmail.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.getUsersByEmail.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
 		}
 	},
 	"Conditions": {

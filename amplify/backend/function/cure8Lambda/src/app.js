@@ -17,13 +17,13 @@ const dynamodb = new AWS.DynamoDB.DocumentClient( {
   convertEmptyValues: true
 } );
 
-let tableName = "cure8Dynamo";
+let tableName = "UsersID";
 if(process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + '-' + process.env.ENV;
 }
 
 const userIdPresent = false; // TODO: update in case is required to use that definition
-const partitionKeyName = "email";
+const partitionKeyName = "id";//email
 const partitionKeyType = "S";
 const sortKeyName = "";
 const sortKeyType = "";

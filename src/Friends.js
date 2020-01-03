@@ -19,13 +19,23 @@ const ListUsers = `
 }
     `;
 
-const RequestFriend = `
-    mutation ($friendRequests: String!) {
-      updateUsers(input: {
-      friendRequests: $friendRequests
-      }) {
+const FindUserByEmail = `
+     query GetUsers($email: String!) {
+       getUsersByEmail(email: $email) {
+         id
+  }
+}
+    `;
+
+const RequestFriend3 = `
+    mutation ($email: String!, $receiverEmail: String!){
+
+     updateUsers(input: {
+        email: $email,
+        receiverEmail: $receiverEmail
+     }) {
         friendRequests
-      }
+     }
     }
     `;
 const RequestFriend2 = `
@@ -54,7 +64,8 @@ export default class Friends extends React.Component {
     state = {
         friend: '',
         author: '',
-        books: []
+        books: [],
+        idOfFriend:''
     };
     async componentDidMount() {
 
@@ -73,14 +84,24 @@ export default class Friends extends React.Component {
     addBook = async () => {
         if (this.state.friend === '') return;
         const book = { friend: this.state.friend };
+
         try {
-            /*const books = [...this.state.friend, book];
-            this.setState({ books, friend: '', author: '' });
-            console.log('books: ', books);*/
-            const params = {friendRequests:this.state.friend ,id: this.props.id };
-            await API.graphql(graphqlOperation(RequestFriend2, params));
-            console.log('success');
-        } catch (err) {
+            const params = {email: this.state.friend}
+             this.state.idOfFriend = await API.graphql(graphqlOperation(FindUserByEmail,params));
+            console.log(this.state.idOfFriend);
+
+            try {
+                /*const books = [...this.state.friend, book];
+                this.setState({ books, friend: '', author: '' });
+                console.log('books: ', books);*/
+                const params = {friendRequests: this.props.id, id: this.state.idOfFriend};
+               // const params = {email: this.props.email, receiverEmail: this.state.friend};
+                await API.graphql(graphqlOperation(RequestFriend2, params));
+                console.log('success');
+            } catch (err) {
+                console.log('error: ', err);
+            }
+        }catch (err) {
             console.log('error: ', err);
         }
     };

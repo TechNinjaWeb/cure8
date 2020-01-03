@@ -1,4 +1,4 @@
-// eslint-disable
+/* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
 export const onCreateUsers = `subscription OnCreateUsers {
@@ -6,7 +6,7 @@ export const onCreateUsers = `subscription OnCreateUsers {
     id
     email
     friends
-    author
+    friendRequests
   }
 }
 `;
@@ -15,7 +15,7 @@ export const onUpdateUsers = `subscription OnUpdateUsers {
     id
     email
     friends
-    author
+    friendRequests
   }
 }
 `;
@@ -24,7 +24,7 @@ export const onDeleteUsers = `subscription OnDeleteUsers {
     id
     email
     friends
-    author
+    friendRequests
   }
 }
 `;

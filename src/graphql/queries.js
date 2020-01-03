@@ -1,4 +1,4 @@
-// eslint-disable
+/* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
 export const getUsers = `query GetUsers($id: ID!) {
@@ -6,11 +6,10 @@ export const getUsers = `query GetUsers($id: ID!) {
     id
     email
     friends
-    author
+    friendRequests
   }
 }
 `;
-
 export const listUserss = `query ListUserss(
   $filter: ModelUsersFilterInput
   $limit: Int
@@ -21,9 +20,18 @@ export const listUserss = `query ListUserss(
       id
       email
       friends
-      author
+      friendRequests
     }
     nextToken
+  }
+}
+`;
+export const getUsersByEmail = `query GetUsersByEmail($email: String!) {
+  getUsersByEmail(email: $email) {
+    id
+    email
+    friends
+    friendRequests
   }
 }
 `;

@@ -18,6 +18,10 @@
 		"cure8Dynamo": {
 			"service": "DynamoDB",
 			"providerPlugin": "awscloudformation"
+		},
+		"UsersID": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation"
 		}
 	},
 	"function": {
@@ -32,6 +36,15 @@
 					"attributes": [
 						"Name",
 						"Arn"
+					]
+				},
+				{
+					"category": "storage",
+					"resourceName": "UsersID",
+					"attributes": [
+						"Name",
+						"Arn",
+						"StreamArn"
 					]
 				}
 			]
