@@ -1,0 +1,15 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "UpdateItem",
+    "key" : {
+        "id" : { "S" : "${context.args.input.id}" }
+    },
+    "update" : {
+        "expression" : "SET friendRequests = list_append(if_not_exists(friendRequests, :emptyList), :newfriendRequests) ADD version :plusOne",
+        "expressionValues" : {
+            ":emptyList": { "L" : [] },
+            ":newfriendRequests" : { "L": [ { "S" : "${context.args.input.friendRequests}" }] },
+            ":plusOne" : { "N" : 1 }
+        }
+    }
+}

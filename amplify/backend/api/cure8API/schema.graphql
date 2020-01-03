@@ -115,7 +115,7 @@ input UpdateUsersInput {
   id: ID!
   email: String
   friends: [String!]
-  friendRequests: [String!]
+  friendRequests: String!
 }
 
 input DeleteUsersInput {
