@@ -19,6 +19,15 @@ const ListUsers = `
 }
     `;
 
+const getUsersFriendRequests = `
+     query GetUsers($id: ID!) {
+       getUsers(id: $id) {
+         friendRequests
+  }
+}
+    `;
+
+
 const FindUserByEmail = `
      query GetUsers($email: String!) {
        getUsersByEmail(email: $email) {
@@ -39,11 +48,12 @@ const RequestFriend3 = `
     }
     `;
 const RequestFriend2 = `
-    mutation ($friendRequests: String!, $id: ID!){
+    mutation ($friendRequests: String!, $id: ID!, $idOfSender: ID!){
 
      updateUsers(input: {
         friendRequests: $friendRequests,
         id: $id
+        idOfSender: $idOfSender
      }) {
         friendRequests
      }
@@ -84,18 +94,42 @@ export default class Friends extends React.Component {
     addBook = async () => {
         if (this.state.friend === '') return;
         const book = { friend: this.state.friend };
-
+        if(this.state.friend==this.props.email){
+            alert("You can't add yourself")
+            throw "can't add yourself"
+        }
         try {
             const params = {email: this.state.friend}
              this.state.idOfFriend = await API.graphql(graphqlOperation(FindUserByEmail,params));
-            console.log(this.state.idOfFriend);
+             console.log(this.state.idOfFriend);
+             if(this.state.idOfFriend.data.getUsersByEmail.id==null){
+                 alert("no such user")
+                 throw "no such user"
+             }
 
+             for(var i = 0; i<this.state.books.length;i++){
+                 if (this.state.books[i]==this.state.friend){
+                     alert("the user is already your friend")
+                     throw "the user is already your friend"
+                 }
+
+             }
+            const params2 = { id: this.state.idOfFriend.data.getUsersByEmail.id };
+            const friendRequestsOfThatUser = await API.graphql(graphqlOperation(getUsersFriendRequests,params2));
+            const friendRequests = Array.from(friendRequestsOfThatUser.data.getUsers.friendRequests)
+            for(var j = 0; j<friendRequests.length;j++){
+                if (friendRequests[j]==this.props.email){
+                    alert("You've already sent a friend request to that user")
+                    throw "You've already sent a friend request to that user"
+                }
+
+            }
             try {
                 /*const books = [...this.state.friend, book];
                 this.setState({ books, friend: '', author: '' });
                 console.log('books: ', books);*/
-                const params = {friendRequests: this.props.id, id: this.state.idOfFriend};
-               // const params = {email: this.props.email, receiverEmail: this.state.friend};
+                const params = {friendRequests: this.props.email, id: this.state.idOfFriend.data.getUsersByEmail.id, idOfSender: this.props.id};
+                // const params = {email: this.props.email, receiverEmail: this.state.friend};
                 await API.graphql(graphqlOperation(RequestFriend2, params));
                 console.log('success');
             } catch (err) {
