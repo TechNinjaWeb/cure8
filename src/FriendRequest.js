@@ -141,11 +141,15 @@ export default class FriendRequest extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Button onPress={this.addBook} friend="Add to friends list" color="#eeaa55" />
                 {this.state.books.map((book, index) => (
                     <View key={index} style={styles.book}>
-                        <Button style={styles.friend}>{book}</Button>
-                        <Button style={styles.friend}>{book}</Button>
+                        <Text style={styles.friend}>{book}</Text>
+                        <Button  buttonStyle={{
+                            backgroundColor: "rgba(69, 209,10, 0.5)",
+                            color:"rgba(69, 209,10, 0.5)"
+                        }}
+                        >{book}</Button>
+                        <Button style={styles.reject}>{book}</Button>
                     </View>
                 ))}
             </View>
@@ -160,10 +164,15 @@ const styles = StyleSheet.create({
         paddingTop: 50
     },
     book: {
+        flexDirection: 'row',
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
-        paddingVertical: 10
+        paddingVertical: 10,
     },
+    accept: { backgroundColor: "rgba(69, 209,10, 0.5)" },
+    reject: { backgroundColor: "rgba(198, 23,23, 0.5)" },
+
     friend: { fontSize: 16 },
+
     author: { color: 'rgba(0, 0, 0, .5)' }
 });
