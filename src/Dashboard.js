@@ -57,6 +57,9 @@ export default class DashBoard extends React.Component {
     showFriends = async event => {
         this.props.history.push("/friends");
     }
+    showInvites = async event => {
+        this.props.history.push("/invites");
+    }
     render() {
         console.log("debug in dashbaord "+this.props.id+"    "+this.props.email)
         const { search } = this.state;
@@ -155,7 +158,7 @@ export default class DashBoard extends React.Component {
                                         <Text style={{fontSize:45,paddingHorizontal:0 }}>  👯‍♀      </Text>
                                         <Text style={{fontSize:30, fontFamily:"Monaco",  }}>Friend Invites</Text>
                                     </View>}
-
+                                    onPress={this.showInvites.bind(this)}
                                     titleStyle={{color:"rgba(140, 140, 140, 1.0)",fontSize:25,textAlign:"left", }}//this works textAlignVertical:"top"
                                     buttonStyle={{
                                         backgroundColor: "rgba(255, 255,255,1)",

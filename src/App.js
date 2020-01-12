@@ -5,6 +5,7 @@ import Home from './Home';
 import Pokemon from './Pokemon';
 import Dashboard from "./Dashboard";
 import SignUp from "./SignUp";
+import FriendRequest from "./FriendRequest"
 import TestAmplify from "./testAmplify";
 import { AppLoading} from 'expo';
 import {Asset} from "expo-asset";
@@ -116,6 +117,17 @@ export default class App extends React.Component {
                       render={props => (
                           this.state.isAuthenticated === true
                               ?<Friends {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id} email={this.state.email}
+
+                              />
+                              :alert(this.state.authenticated)
+
+                      )}
+                  />
+                  <Route
+                      path="/invites"
+                      render={props => (
+                          this.state.isAuthenticated === true
+                              ?<FriendRequest {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id} email={this.state.email}
 
                               />
                               :alert(this.state.authenticated)
