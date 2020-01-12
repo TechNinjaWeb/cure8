@@ -102,7 +102,7 @@ export default class Friends extends React.Component {
             const params = {email: this.state.friend}
              this.state.idOfFriend = await API.graphql(graphqlOperation(FindUserByEmail,params));
              console.log(this.state.idOfFriend);
-             if(this.state.idOfFriend.data.getUsersByEmail.id==null){
+             if(this.state.idOfFriend.data.getUsersByEmail==null){
                  alert("no such user")
                  throw "no such user"
              }
