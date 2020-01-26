@@ -104,6 +104,12 @@ type Query {
   getUsersByEmail(email: String!): Users
 }
 
+input AddFriendInput {
+	id: ID
+	email: String
+	friendEmail: String
+	index: Int
+}
 input CreateUsersInput {
   id: ID
   email: String
@@ -126,6 +132,7 @@ type Mutation {
   createUsers(input: CreateUsersInput!, condition: ModelUsersConditionInput): Users
   updateUsers(input: UpdateUsersInput!, condition: ModelUsersConditionInput): Users
   deleteUsers(input: DeleteUsersInput!, condition: ModelUsersConditionInput): Users
+  addFriend(input: AddFriendInput!, condition: ModelUsersConditionInput): Users
 }
 
 input ModelUsersConditionInput {

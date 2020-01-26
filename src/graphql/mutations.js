@@ -37,3 +37,15 @@ export const deleteUsers = `mutation DeleteUsers(
   }
 }
 `;
+export const addFriend = `mutation AddFriend(
+  $input: AddFriendInput!
+  $condition: ModelUsersConditionInput
+) {
+  addFriend(input: $input, condition: $condition) {
+    id
+    email
+    friends
+    friendRequests
+  }
+}
+`;

@@ -36,7 +36,6 @@
 				"DataSourceName": "UsersID",
 				"TypeName": "Query",
 				"FieldName": "getUsers",
-
 				"RequestMappingTemplateS3Location": {
 					"Fn::Sub": [
 						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.getUsers.req.vtl",
@@ -64,7 +63,7 @@
 					]
 				}
 			}
-			},
+		},
 		"QueryGetUsersByEmailResolver": {
 			"Type": "AWS::AppSync::Resolver",
 			"Properties": {
@@ -74,7 +73,6 @@
 				"DataSourceName": "UsersID",
 				"TypeName": "Query",
 				"FieldName": "getUsersByEmail",
-
 				"RequestMappingTemplateS3Location": {
 					"Fn::Sub": [
 						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.getUsersByEmail.req.vtl",
@@ -112,7 +110,6 @@
 				"DataSourceName": "UsersID",
 				"TypeName": "Mutation",
 				"FieldName": "updateUsers",
-
 				"RequestMappingTemplateS3Location": {
 					"Fn::Sub": [
 						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Mutation.updateUsers.req.vtl",
@@ -136,6 +133,195 @@
 							"S3DeploymentRootKey": {
 								"Ref": "S3DeploymentRootKey"
 							}
+						}
+					]
+				}
+			}
+		},
+		"getIDfromEmailFunction": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"Name": "getIDfromEmailFunction",
+				"FunctionVersion": "2018-05-29",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/getIDfromEmail.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/getIDfromEmail.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"addYourEmailToRequesterFriendsFunction": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"Name": "addYourEmailToRequesterFriendsFunction",
+				"FunctionVersion": "2018-05-29",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/addYourEmailToRequesterFriends.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/addYourEmailToRequesterFriends.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"addRequestersEmailToYourFriendsFunction": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"Name": "addRequestersEmailToYourFriendsFunction",
+				"FunctionVersion": "2018-05-29",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/addRequestersEmailToYourFriends.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/addRequestersEmailToYourFriends.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"deleteRequestFunction": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"Name": "deleteRequestFunction",
+				"FunctionVersion": "2018-05-29",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/deleteRequest.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/deleteRequest.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"MutationAddFriendResolver": {
+			"Type": "AWS::AppSync::Resolver",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"Kind": "PIPELINE",
+				"TypeName": "Mutation",
+				"FieldName": "addFriend",
+				"RequestMappingTemplate": "$util.qr($ctx.stash.put(\"email\", $ctx.args.input.email))\n$util.qr($ctx.stash.put(\"friendEmail\", $ctx.args.input.friendEmail))\n$util.qr($ctx.stash.put(\"id\", $ctx.args.input.id))\n$util.qr($ctx.stash.put(\"index\", $ctx.args.input.index)) \n{}",
+				"ResponseMappingTemplate": "$util.toJson($ctx.result)",
+				"PipelineConfig": {
+					"Functions": [
+						{
+							"Fn::GetAtt": [
+								"getIDfromEmailFunction",
+								"FunctionId"
+							]
+						},
+						{
+							"Fn::GetAtt": [
+								"addYourEmailToRequesterFriendsFunction",
+								"FunctionId"
+							]
+						},
+						{
+							"Fn::GetAtt": [
+								"addRequestersEmailToYourFriendsFunction",
+								"FunctionId"
+							]
+						},
+						{
+							"Fn::GetAtt": [
+								"deleteRequestFunction",
+								"FunctionId"
+							]
 						}
 					]
 				}
