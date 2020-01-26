@@ -49,3 +49,15 @@ export const addFriend = `mutation AddFriend(
   }
 }
 `;
+export const rejectFriend = `mutation RejectFriend(
+  $input: RejectFriendInput!
+  $condition: ModelUsersConditionInput
+) {
+  rejectFriend(input: $input, condition: $condition) {
+    id
+    email
+    friends
+    friendRequests
+  }
+}
+`;
