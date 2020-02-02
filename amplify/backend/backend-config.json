@@ -22,6 +22,10 @@
 		"UsersID": {
 			"service": "DynamoDB",
 			"providerPlugin": "awscloudformation"
+		},
+		"dynamoLeagues": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation"
 		}
 	},
 	"function": {

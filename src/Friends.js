@@ -48,12 +48,11 @@ const RequestFriend3 = `
     }
     `;
 const RequestFriend2 = `
-    mutation ($friendRequests: String!, $id: ID!, $idOfSender: ID!){
+    mutation ($friendRequests: String!, $id: ID!){
 
      updateUsers(input: {
         friendRequests: $friendRequests,
         id: $id
-        idOfSender: $idOfSender
      }) {
         friendRequests
      }
@@ -128,7 +127,7 @@ export default class Friends extends React.Component {
                 /*const books = [...this.state.friend, book];
                 this.setState({ books, friend: '', author: '' });
                 console.log('books: ', books);*/
-                const params = {friendRequests: this.props.email, id: this.state.idOfFriend.data.getUsersByEmail.id, idOfSender: this.props.id};
+                const params = {friendRequests: this.props.email, id: this.state.idOfFriend.data.getUsersByEmail.id};
                 // const params = {email: this.props.email, receiverEmail: this.state.friend};
                 await API.graphql(graphqlOperation(RequestFriend2, params));
                 console.log('success');

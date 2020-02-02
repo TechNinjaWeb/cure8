@@ -1,0 +1,14 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key" : {
+        "id" : { "S" : "${ctx.prev.result.id}" }
+    },
+    "update" : {
+        "expression" : "REMOVE friendRequests[${ctx.args.input.index}] ADD version :plusOne",
+        "expressionValues" : {
+            ":plusOne" : { "N" : 1 }
+        }
+    }
+
+}
