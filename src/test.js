@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { StyleSheet, Text, TextInput, Button, View } from 'react-native';
 import Amplify from 'aws-amplify';
@@ -24,7 +23,7 @@ const AddUser = `
       }
     }
     `;
-export default class App extends React.Component {
+export default class Test extends React.Component {
     state = {
         friend: '',
         author: '',

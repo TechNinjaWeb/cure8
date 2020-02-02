@@ -15,6 +15,8 @@ import { WebBrowser } from 'expo';
 import { Auth } from "aws-amplify";
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from "react-native-vector-icons/FontAwesome";
+import axios from 'axios';
+import Artist from './ArtistPage'
 
 
 
@@ -35,18 +37,43 @@ export default class DashBoard extends React.Component {
             username: '',
             password: '',
             search: '',
-
         };
 
     }
     updateSearch = search => {
         this.setState({ search });
+        console.log(this.state.search)
+
+    };
+
+    handleSearch = async search =>{
+        console.log("search this now"+this.state.search);
+        const response =
+          await axios.get("https://api.spotify.com/v1/search?q="+this.state.search+"&type=artist&limit=1",
+            { headers: {'Content-Type': 'application/json',
+                        'Accept':'application/json',
+                        'Authorization': 'Bearer BQB81IRNo8eNwR9nW9buY0LPwcUfmdKNSnxsB3wC36iNNLOkwfiMihUXfhj5FEBve8edhef53BPIjZTbh-3FzQnIXLphg8Qmfx0c7GYkR5jSArnLRZou7Cv0d3eRjH3QLSPlHnF3YMl7L33qLg'
+                        }}
+          )
+          console.log(response.data.artists)
+          console.log(response.data.artists.items[0].id)
+          const artID = response.data.artists.items[0].id
+          //this.props.artistID = artID
+          this.props.selectArtistID(artID)
+          //call artist page with the id
+          
+          this.props.history.push('/artist');
+          
+    };
+    createLeague = search => {
+        console.log("Deal with creation of league...")
     };
 
 
     _handleKeyDown = (e) => {
         if (e.key === 'Enter') {
             alert("validate")
+            comsole.log("ENter pressed????")
         }
     }
     handleLogout = async event => {
@@ -122,6 +149,7 @@ export default class DashBoard extends React.Component {
                             borderBottomColor={'transparent'}
                             borderTopColor={'transparent'}
                             searchIcon={<Button
+                                onClick={this.handleSearch}
                                 icon={<Icon name="search" color="#3A85D6" size={40} shadowRadius={10}/>}
                                 buttonStyle={{
                                     backgroundColor: "rgba(255, 255,255, 0.5)",
@@ -262,6 +290,8 @@ export default class DashBoard extends React.Component {
                                         <Text style={{fontSize:45,paddingHorizontal:0 }}>  👯‍♀      </Text>
                                         <Text style={{fontSize:30, fontFamily:"Monaco",  }}>Create League</Text>
                                     </View>}
+
+                                    onPress={this.createLeague.bind(this)}
 
                                     titleStyle={{color:"rgba(140, 140, 140, 1.0)",fontSize:25,textAlign:"left", }}//this works textAlignVertical:"top"
                                     buttonStyle={{

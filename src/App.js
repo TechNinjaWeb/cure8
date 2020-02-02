@@ -6,13 +6,14 @@ import Pokemon from './Pokemon';
 import Dashboard from "./Dashboard";
 import SignUp from "./SignUp";
 import FriendRequest from "./FriendRequest"
-import TestAmplify from "./testAmplify";
+//import Test from "./test";
 import { AppLoading} from 'expo';
 import {Asset} from "expo-asset";
 import * as Font from "expo-font";
 import Amplify from '@aws-amplify/core'
 import config from './config'
 import Friends from "./Friends";
+import Artist from "./ArtistPage"
 Amplify.configure({ Auth: {
     mandatorySignIn: true,
     region: config.cognito.REGION,
@@ -25,6 +26,7 @@ export default class App extends React.Component {
     selectedPokemon: null,
     isLoadingComplete: false,
     isAuthenticated: false,
+    ArtistID: null,
     id:null,
       email: null
   };
@@ -46,6 +48,9 @@ export default class App extends React.Component {
   }
   selectEmail= email => {
         this.setState({ email });
+  }
+  selectArtistID = ArtistID =>{
+      this.setState({ArtistID});
   }
 
 
@@ -94,7 +99,7 @@ export default class App extends React.Component {
                     path="/dashboard"
                     render={props => (
                         this.state.isAuthenticated === true
-                            ?<Dashboard {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id} email={this.state.email}
+                            ?<Dashboard {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id} email={this.state.email} ArtistID={this.state.ArtistID} selectArtistID={this.selectArtistID}
 
                             />
                             :alert(this.state.authenticated)
@@ -102,15 +107,10 @@ export default class App extends React.Component {
                     )}
                 />
                 <Route
-                    path="/test"
+                    path="/artist"
                     render={props => (
-                        this.state.isAuthenticated === true
-                            ?<TestAmplify {...props} userHasAuthenticated={this.userHasAuthenticated}
-
-                            />
-                            :alert(this.state.authenticated)
-
-                    )}
+                      <Artist {...props} selectPokemon={this.selectPokemon} userHasAuthenticated={this.userHasAuthenticated} returnUserId={this.returnUserId} selectID={this.selectID} selectEmail={this.selectEmail} isAuthenticated={this.state.isAuthenticated} ArtistID={this.state.ArtistID} />
+                  )}
                 />
                   <Route
                       path="/friends"
