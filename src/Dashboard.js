@@ -1,3 +1,4 @@
+//import React from 'react';
 import React from 'react';
 import {
     Image,
@@ -16,6 +17,12 @@ import { Auth } from "aws-amplify";
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from 'axios';
+
+import Modal from 'modal-enhanced-react-native-web';
+//import Modal from 'react-native-modal';  For iOS and Android verions
+
+
+
 import Artist from './ArtistPage'
 
 
@@ -37,9 +44,11 @@ export default class DashBoard extends React.Component {
             username: '',
             password: '',
             search: '',
+            isFriendsModalVisible: false
         };
 
     }
+
     updateSearch = search => {
         this.setState({ search });
         console.log(this.state.search)
@@ -82,7 +91,8 @@ export default class DashBoard extends React.Component {
         this.props.history.push("/");
     }
     showFriends = async event => {
-        this.props.history.push("/friends");
+     //   this.props.history.push("/friends");
+        this.setState({isFriendsModalVisible: !this.state.isFriendsModalVisible});
     }
     showInvites = async event => {
         this.props.history.push("/invites");
@@ -158,6 +168,15 @@ export default class DashBoard extends React.Component {
                             value={search}
 
                         />
+                        <Modal  isVisible={this.state.isFriendsModalVisible}   onBackdropPress={() => this.setState({isVisible: false})} style={{ backgroundColor: 'rgba(255, 255, 255, 1)'  }}>
+                            {this.state.isFriendsModalVisible == true &&(
+                                <View style={{ alignItems: 'center',
+                                    justifyContent: 'center',}}>
+                                    <Text>Hello!</Text>
+                                    <Button title="Hide modal" onPress={this.showFriends} />
+                                </View>
+                            )}
+                        </Modal>
                         <View style={styles.buttonContainer}>
                             <View style={{ flexDirection: 'column', marginRight: 80}}>
                                 <Button

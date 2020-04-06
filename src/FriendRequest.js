@@ -83,9 +83,6 @@ export default class FriendRequest extends React.Component {
         console.log('books: ', books);
         this.setState({ books: Array.from(books.data.getUsers.friendRequests)});
         console.log(this.state.books);
-
-
-
     }
     onChangeText = (key, val) => {
         this.setState({ [key]: val });
@@ -111,7 +108,6 @@ export default class FriendRequest extends React.Component {
                     alert("the user is already your friend")
                     throw "the user is already your friend"
                 }
-
             }
             const params2 = { id: this.state.idOfFriend.data.getUsersByEmail.id };
             const friendRequestsOfThatUser = await API.graphql(graphqlOperation(getUsersFriendRequests,params2));
@@ -144,7 +140,7 @@ export default class FriendRequest extends React.Component {
                 {this.state.books.map((book, index) => (
                     <View key={index} style={styles.book}>
                         <Text style={styles.friend}>{book}</Text>
-                        <Button  buttonStyle={{
+                        <Button  onPress={this.acceptFriend} buttonStyle={{
                             backgroundColor: "rgba(69, 209,10, 0.5)",
                             color:"rgba(69, 209,10, 0.5)"
                         }}

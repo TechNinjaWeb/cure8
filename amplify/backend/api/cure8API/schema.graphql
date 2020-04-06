@@ -4,6 +4,11 @@ type Users {
   friends: [String!]
   friendRequests: [String!]
 }
+type Leagues {
+	leagueID: ID!
+	ownerID: ID!
+	members: [ID!]
+}
 
 enum ModelSortDirection {
   ASC
@@ -110,6 +115,10 @@ input AddFriendInput {
 	friendEmail: String
 	index: Int
 }
+input CreateLeagueInput {
+	leagueID: ID!
+	ownerID: ID!
+}
 input RejectFriendInput {
 	id: ID
 	index: Int
@@ -138,6 +147,7 @@ type Mutation {
   deleteUsers(input: DeleteUsersInput!, condition: ModelUsersConditionInput): Users
   addFriend(input: AddFriendInput!, condition: ModelUsersConditionInput): Users
   rejectFriend(input: RejectFriendInput!, condition: ModelUsersConditionInput): Users
+  createLeague(input: CreateLeagueInput!, condition: ModelLeaguesConditionInput): Leagues
 }
 
 input ModelUsersConditionInput {
@@ -147,6 +157,14 @@ input ModelUsersConditionInput {
   and: [ModelUsersConditionInput]
   or: [ModelUsersConditionInput]
   not: ModelUsersConditionInput
+}
+input ModelLeaguesConditionInput {
+	leagueID: ModelStringInput
+	ownerID: ModelStringInput
+	members: ModelStringInput
+	and: [ModelLeaguesConditionInput]
+	or: [ModelLeaguesConditionInput]
+	not: ModelLeaguesConditionInput
 }
 
 enum ModelAttributeTypes {
