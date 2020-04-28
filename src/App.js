@@ -64,7 +64,6 @@ export default class App extends React.Component {
           />
       );
     } else {
-      alert("hey")
       return (
 
             <Router>

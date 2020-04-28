@@ -20,8 +20,8 @@ import axios from 'axios';
 
 import Modal from 'modal-enhanced-react-native-web';
 //import Modal from 'react-native-modal';  For iOS and Android verions
-
-
+//import { BlurView } from "@react-native-community/blur";
+//import { BlurView } from 'expo-blur';
 
 import Artist from './ArtistPage'
 
@@ -139,7 +139,8 @@ export default class DashBoard extends React.Component {
                     </View>
                 )}
                 {Platform.OS == 'web' && !ios &&(
-                    <ImageBackground source={require('../assets/DashboardBackground .png')} style={styles.backgroundImage} >
+                    <ImageBackground source={require('../assets/DashboardBackground .png')}
+                                     style={styles.backgroundImage} >
                         <SearchBar
                             platform="default"
                             round
@@ -168,15 +169,43 @@ export default class DashBoard extends React.Component {
                             value={search}
 
                         />
-                        <Modal  isVisible={this.state.isFriendsModalVisible}   onBackdropPress={() => this.setState({isVisible: false})} style={{ backgroundColor: 'rgba(255, 255, 255, 1)'  }}>
+
+                        <Modal  isVisible={this.state.isFriendsModalVisible} animationIn="slideInLeft" animationOut="slideOutLeft" hasBackdrop={false}  style={styles.sideBar}  backdropOpacity={0} >
                             {this.state.isFriendsModalVisible == true &&(
-                                <View style={{ alignItems: 'center',
-                                    justifyContent: 'center',}}>
-                                    <Text>Hello!</Text>
-                                    <Button title="Hide modal" onPress={this.showFriends} />
+                                <ImageBackground source={require('../assets/SidebarBack3.png')}
+                                                 style={{ height: '97.5%',  width: '100%', resizeMode: 'stretch',   // or 'stretch'
+                                                     margin: 0,
+                                                     minWidth: 300,
+                                                     minHeight: 1000}} imageStyle={{  borderBottomRightRadius: 60, borderTopRightRadius: 60 }} >
+                                <View style={styles.sideBarInside}>
+                                    <Button  icon={<Icon name="chevron-left" color="#FFFFFF" size={30} />} buttonStyle={{
+                                        alignSelf: 'flex-end',
+                                        position: 'absolute',
+                                        marginTop:20,
+                                        left: 180,
+                                        width: 60,
+                                        height: 60,
+                                        backgroundColor: "none"
+                                    }} onPress={this.showFriends} />
+                                    <View style={{marginTop: 100, flexDirection: 'row'}}>
+                                    <Text style={{
+                                         color:'#fff', fontSize:25, fontFamily:"Lucida Grande"}}>{this.props.email}Bulat Biimullun
+                                    </Text>
+                                    <Image
+                                        source={require('../assets/postyProfilePic.png')}
+                                        style={{width: 70, height: 70, borderRadius: 400/ 2}}
+                                    />
+                                    </View>
+
                                 </View>
+                                </ImageBackground>
+
                             )}
                         </Modal>
+
+
+
+
                         <View style={styles.buttonContainer}>
                             <View style={{ flexDirection: 'column', marginRight: 80}}>
                                 <Button
@@ -219,6 +248,7 @@ export default class DashBoard extends React.Component {
                                         marginBottom: 21,
                                         justifyContent:"left"
                                     }}
+
                                 />
                                 <Button
                                     title={<View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -349,6 +379,7 @@ export default class DashBoard extends React.Component {
                             </View>
                         </View>
                     </ImageBackground>
+
                 )}
             </View>
 
@@ -357,6 +388,7 @@ export default class DashBoard extends React.Component {
 
 
 }
+
 const styles = StyleSheet.create({
 
     backgroundImage: {
@@ -369,6 +401,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         minWidth: 1000,
         minHeight: 1000,
+        backgroundColor: 'rgba(0,0,0,0.5)',
 
 
     },
@@ -387,7 +420,7 @@ const styles = StyleSheet.create({
         //marginRight: 200,
         //margin: 1000,
         justifyContent: 'top',
-       marginBottom: 200
+        marginBottom: 200
 
     },
 
@@ -408,4 +441,51 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         marginBottom: 10,
     },
+    sideBar: {
+        backgroundColor: 'rgba(65, 62, 115, 0)',
+        width: '30%',
+        height: '100%',
+        margin: 0,
+        minWidth: 500,
+        minHeight: 1000,
+
+      //  blurRadius: 1000,
+   //     blur: 1000,
+
+        //   alignItems: 'start',
+      //  justifyContent: "left",
+       // flex: 1
+    },
+    sideBar2main: {
+        width: '30%',
+        height: '100%',
+        margin: 0,
+      //  backgroundColor: 'rgba(65, 62, 115, 1)',
+    //    blurRadius: 1000,
+     //   blur: 1000,
+
+        //   alignItems: 'start',
+        //  justifyContent: "left",
+        // flex: 1
+    },
+    sideBarInside: {
+       // backgroundColor: 'rgba(255, 255, 255, 1)',
+        width: '100%',
+        height: '100%',
+       alignItems: 'center',
+        justifyContent: 'flex-start'
+       // blurRadius: 1000,
+       // blur: 1000
+    },
+    sideBar2: {
+        // backgroundColor: 'rgba(255, 255, 255, 1)',
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        opacity: 1
+     //   blurRadius: 1000,
+     //   blur: 1000
+    }
+
 });
