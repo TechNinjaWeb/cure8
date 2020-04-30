@@ -17,7 +17,7 @@ import { Auth } from "aws-amplify";
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from 'axios';
-
+import { API, graphqlOperation } from 'aws-amplify';
 import Modal from 'modal-enhanced-react-native-web';
 //import Modal from 'react-native-modal';  For iOS and Android verions
 //import { BlurView } from "@react-native-community/blur";
@@ -31,6 +31,44 @@ import Artist from './ArtistPage'
 
 
 //Check if I actually need router stuff in render function
+const ListUsers = `
+     query GetUsers($id: ID!) {
+       getUsers(id: $id) {
+         friends
+  }
+}
+    `;
+
+const getUsersFriendRequests = `
+     query GetUsers($id: ID!) {
+       getUsers(id: $id) {
+         friendRequests
+  }
+}
+    `;
+
+
+const FindUserByEmail = `
+     query GetUsers($email: String!) {
+       getUsersByEmail(email: $email) {
+         id
+  }
+}
+    `;
+
+
+const RequestFriend2 = `
+    mutation ($friendRequests: String!, $id: ID!){
+
+     updateUsers(input: {
+        friendRequests: $friendRequests,
+        id: $id
+     }) {
+        friendRequests
+     }
+    }
+    `;
+
 
 export default class DashBoard extends React.Component {
     static navigationOptions = {
@@ -44,11 +82,16 @@ export default class DashBoard extends React.Component {
             username: '',
             password: '',
             search: '',
-            isFriendsModalVisible: false
+            isFriendsModalVisible: false,
+            friend: '',
+            friendList: [],
+            idOfFriend:'',
+            friend2: '',
+            friendRequestsList: [],
+
         };
 
     }
-
     updateSearch = search => {
         this.setState({ search });
         console.log(this.state.search)
@@ -91,7 +134,19 @@ export default class DashBoard extends React.Component {
         this.props.history.push("/");
     }
     showFriends = async event => {
-     //   this.props.history.push("/friends");
+
+        const params = { id: this.props.id };
+        const books = await API.graphql(graphqlOperation(ListUsers,params));
+        console.log('books: ', books);
+        console.log('after test');
+        this.setState({ friendList: Array.from(books.data.getUsers.friends)});
+        console.log(this.state.friendList);
+
+        const books2 = await API.graphql(graphqlOperation(getUsersFriendRequests,params));
+        console.log('requests: ', books2);
+        this.setState({ friendRequestsList: Array.from(books2.data.getUsers.friendRequests)});
+        console.log(this.state.friendRequestsList);
+
         this.setState({isFriendsModalVisible: !this.state.isFriendsModalVisible});
     }
     showInvites = async event => {
@@ -187,16 +242,117 @@ export default class DashBoard extends React.Component {
                                         height: 60,
                                         backgroundColor: "none"
                                     }} onPress={this.showFriends} />
-                                    <View style={{marginTop: 100, flexDirection: 'row'}}>
-                                    <Text style={{
-                                         color:'#fff', fontSize:25, fontFamily:"Lucida Grande"}}>{this.props.email}Bulat Biimullun
-                                    </Text>
-                                    <Image
-                                        source={require('../assets/postyProfilePic.png')}
-                                        style={{width: 70, height: 70, borderRadius: 400/ 2}}
-                                    />
+                                  <View style={{marginTop: 100, flexDirection: 'column', marginRight: 70}}>
+                                    <View style={{ flexDirection: 'row'}}>
+                                        <Image
+                                            source={require('../assets/postyProfilePic.png')}
+                                            style={{width: 70, height: 70, borderRadius: 400/ 2}}
+                                        />
+                                        <View style={{marginTop: 5, left: 83, flexDirection: 'column', marginRight: 100, position: "absolute"}}>
+                                            <Text numberOfLines={1} style={{
+                                               color:'#fff', fontSize:25, width:300, flex: 1,fontFamily:"Lucida Grande"}}>  {this.props.email}Bulat Bikmullin vgvvevrehlvbwvblebvwfivk.bbveflv
+                                            </Text>
+                                            <Text style={{
+                                                color:'#fff', fontSize:18, fontFamily:"Monaco"}}> Level 1
+                                            </Text>
+                                        </View>
                                     </View>
+                                    <SearchBar
+                                        platform="default"
+                                        round
+                                        placeholder="Add friends"
+                                        placeholderTextColor={'#g5g5g5'}
+                                        inputStyle={{backgroundColor: 'white',fontSize:25,height:50,outline:'none', onKeyDown:this._handleKeyDown,fontFamily:"Monaco" }}
+                                        containerStyle={{backgroundColor: 'white', borderRadius: 22, width:350, height:55, justifyContent:'center', padding: 0, marginTop: 25}}
+                                        inputContainerStyle={{backgroundColor:'white'}}
 
+                                        onChangeText={this.updateSearch}
+                                        lightTheme={true}
+
+
+                                        removeClippedSubviews={true}
+                                        clearIcon={false}
+                                        borderBottomColor={'transparent'}
+                                        borderTopColor={'transparent'}
+                                        searchIcon={<Button
+                                            onClick={this.handleSearch}
+                                            icon={<Icon name="search" color="#3A85D6" size={40} shadowRadius={10}/>}
+                                            buttonStyle={{
+                                                backgroundColor: "rgba(255, 255,255, 0.5)",
+                                            }}
+                                        />}
+
+                                    />
+                                    <Text style={{
+                                          color:'#fff', fontSize:22, marginTop: 20,fontFamily:"Lucida Grande"}}>My Friends:
+                                    </Text>
+                                      {this.state.friendList.map((book, index) => (
+                                          <View key={index} style={styles.book}>
+                                              <Image
+                                                  source={require('../assets/postyProfilePic.png')}
+                                                  style={{width: 70, height: 70, borderRadius: 400/ 2}}
+                                              />
+                                              <Text numberOfLines={1} style={styles.friendText}>{book}</Text>
+                                              <Button  icon={<Icon name="envelope" color="#FFFFFF" size={25} />} buttonStyle={{
+                                                  alignSelf: 'flex-end',
+                                                  position: 'absolute',
+                                                  width: 25,
+                                                  height: 25,
+                                                  backgroundColor: "none",
+                                                  marginTop: 17
+                                              }} onPress={this.showFriends} />
+                                              <Button  icon={<Icon name="gamepad" color="#FFFFFF" size={25} />} buttonStyle={{
+                                                  alignSelf: 'flex-end',
+                                                  position: 'absolute',
+                                                  width: 25,
+                                                  height: 25,
+                                                  backgroundColor: "none",
+                                                  marginTop: 17,
+                                                  marginLeft: 45
+                                              }} onPress={this.showFriends} />
+                                              <Button  icon={<Icon name="remove" color="#FFFFFF" size={25} />} buttonStyle={{
+                                                  alignSelf: 'flex-end',
+                                                  position: 'absolute',
+                                                  width: 25,
+                                                  height: 25,
+                                                  backgroundColor: "none",
+                                                  marginTop: 17,
+                                                  marginLeft: 90
+                                              }} onPress={this.showFriends} />
+
+                                          </View>
+                                      ))}
+                                      <Text style={{
+                                          color:'#fff', fontSize:22, marginTop: 20,fontFamily:"Lucida Grande"}}>Friend Invites:
+                                      </Text>
+                                      {this.state.friendRequestsList.map((book, index) => (
+                                          <View key={index} style={styles.book}>
+                                              <Image
+                                                  source={require('../assets/postyProfilePic.png')}
+                                                  style={{width: 70, height: 70, borderRadius: 400/ 2}}
+                                              />
+                                              <Text numberOfLines={1} style={styles.friendText}>{book}</Text>
+                                              <Button  icon={<Icon name="check" color="#FFFFFF" size={25} />} buttonStyle={{
+                                                  alignSelf: 'flex-end',
+                                                  position: 'absolute',
+                                                  width: 25,
+                                                  height: 25,
+                                                  backgroundColor: "none",
+                                                  marginTop: 17,
+                                                  marginLeft: 45
+                                              }} onPress={this.showFriends} />
+                                              <Button  icon={<Icon name="remove" color="#FFFFFF" size={25} />} buttonStyle={{
+                                                  alignSelf: 'flex-end',
+                                                  position: 'absolute',
+                                                  width: 25,
+                                                  height: 25,
+                                                  backgroundColor: "none",
+                                                  marginTop: 17,
+                                                  marginLeft: 90
+                                              }} onPress={this.showFriends} />
+                                          </View>
+                                      ))}
+                                  </View>
                                 </View>
                                 </ImageBackground>
 
@@ -486,6 +642,12 @@ const styles = StyleSheet.create({
         opacity: 1
      //   blurRadius: 1000,
      //   blur: 1000
-    }
+    },
+    book: {
+        paddingVertical: 10,
+        flexDirection: 'row',
+        marginTop: 10
+    },
+    friendText: { color:'#fff', fontSize:22, width:200, flex: 1,fontFamily:"Lucida Grande", marginTop: 17, paddingLeft: 14 }
 
 });
