@@ -83,6 +83,17 @@ const AcceptFriend = `
     }
     `;
 
+const RejectFriend = `
+    mutation ($userID: ID!, $index: Int!){
+
+     rejectFriend(input: {
+        id: $userID,
+        index: $index
+      }) {
+        friendRequests
+     }
+    }
+    `;
 
 export default class DashBoard extends React.Component {
     static navigationOptions = {
@@ -238,6 +249,12 @@ export default class DashBoard extends React.Component {
         console.log('books: ', books);
         this.setState({friendRequestsList: Array.from(books.data.addFriend.friendRequests)});
         this.setState({friendList: Array.from(books.data.addFriend.friends)});
+    }
+    rejectFriend = async (index) => {
+        const params = { userID: this.props.id, index: index};
+        const books = await API.graphql(graphqlOperation(RejectFriend,params));
+        console.log('books: ', books);
+        this.setState({friendRequestsList: Array.from(books.data.rejectFriend.friendRequests)});
     }
     render() {
         console.log("debug in dashbaord "+this.props.id+"    "+this.props.email)
@@ -438,7 +455,7 @@ export default class DashBoard extends React.Component {
                                                   backgroundColor: "none",
                                                   marginTop: 17,
                                                   marginLeft: 90
-                                              }} onPress={this.showFriends} />
+                                              }} onPress={() => this.rejectFriend(index)} />
                                           </View>
                                       ))}
                                   </View>
