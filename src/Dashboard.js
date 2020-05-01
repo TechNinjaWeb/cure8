@@ -68,6 +68,20 @@ const RequestFriend2 = `
      }
     }
     `;
+const AcceptFriend = `
+    mutation ($userID: ID!, $userEmail: String!, $friendEmail: String!, $index: Int!){
+
+     addFriend(input: {
+         id: $userID,
+        email: $userEmail, 
+        friendEmail: $friendEmail, 
+        index: $index
+      }) {
+        friendRequests,
+        friends
+     }
+    }
+    `;
 
 
 export default class DashBoard extends React.Component {
@@ -97,6 +111,11 @@ export default class DashBoard extends React.Component {
         console.log(this.state.search)
 
     };
+    updateFriendSearch = friend => {
+        this.setState({ friend });
+        console.log(this.state.friend)
+
+    };
 
     handleSearch = async search =>{
         console.log("search this now"+this.state.search);
@@ -117,6 +136,66 @@ export default class DashBoard extends React.Component {
           this.props.history.push('/artist');
           
     };
+    handleFriendSearch = async() =>{
+        if (this.state.friend === '') return;
+        const book = { friend: this.state.friend };
+        if(this.state.friend==this.props.email){
+            alert("You can't add yourself")
+            throw "can't add yourself"
+        }
+        try {
+            const params = {email: this.state.friend}
+            this.state.idOfFriend = await API.graphql(graphqlOperation(FindUserByEmail,params));
+            console.log(this.state.idOfFriend+ "in try");
+            if(this.state.idOfFriend.data.getUsersByEmail==null){
+                alert("no such user")
+                throw "no such user"
+            }
+
+            for(var i = 0; i<this.state.friendList.length;i++){
+                if (this.state.friendList[i]==this.state.friend){
+                    alert("the user is already your friend")
+                    throw "the user is already your friend"
+                }
+
+            }
+            for(var i = 0; i<this.state.friendRequestsList.length;i++){
+                if (this.state.friendRequestsList[i]==this.state.friend){
+                    alert("the user has already sent you a friend request")
+                    throw "the user has already sent you a friend request"
+                }
+
+            }
+
+            const params2 = { id: this.state.idOfFriend.data.getUsersByEmail.id };
+            const friendRequestsOfThatUser = await API.graphql(graphqlOperation(getUsersFriendRequests,params2));
+            const friendRequests = Array.from(friendRequestsOfThatUser.data.getUsers.friendRequests)
+            for(var j = 0; j<friendRequests.length;j++){
+                if (friendRequests[j]==this.props.email){
+                    alert("You've already sent a friend request to that user")
+                    throw "You've already sent a friend request to that user"
+                }
+
+            }
+            try {
+                /*const books = [...this.state.friend, book];
+                this.setState({ books, friend: '', author: '' });
+                console.log('books: ', books);*/
+                const params = {friendRequests: this.props.email, id: this.state.idOfFriend.data.getUsersByEmail.id};
+                // const params = {email: this.props.email, receiverEmail: this.state.friend};
+                await API.graphql(graphqlOperation(RequestFriend2, params));
+                console.log('success');
+            } catch (err) {
+                console.log('error: ', err);
+            }
+        }catch (err) {
+            console.log('error: ', err);
+        }
+
+
+
+    };
+
     createLeague = search => {
         console.log("Deal with creation of league...")
     };
@@ -150,11 +229,20 @@ export default class DashBoard extends React.Component {
         this.setState({isFriendsModalVisible: !this.state.isFriendsModalVisible});
     }
     showInvites = async event => {
-        this.props.history.push("/invites");
+        this.props.history.push("/friends");
+    }
+    acceptFriend = async (friendEmail, index) => {
+
+        const params = { userID: this.props.id, userEmail: this.props.email, friendEmail:friendEmail, index: index};
+        const books = await API.graphql(graphqlOperation(AcceptFriend,params));
+        console.log('books: ', books);
+        this.setState({friendRequestsList: Array.from(books.data.addFriend.friendRequests)});
+        this.setState({friendList: Array.from(books.data.addFriend.friends)});
     }
     render() {
         console.log("debug in dashbaord "+this.props.id+"    "+this.props.email)
         const { search } = this.state;
+        const { friend } = this.state;
         if(Platform.OS != 'ios') {
             //alert(Platform.OS)
             var userAgent = window.navigator.userAgent.toLowerCase(),
@@ -266,7 +354,7 @@ export default class DashBoard extends React.Component {
                                         containerStyle={{backgroundColor: 'white', borderRadius: 22, width:350, height:55, justifyContent:'center', padding: 0, marginTop: 25}}
                                         inputContainerStyle={{backgroundColor:'white'}}
 
-                                        onChangeText={this.updateSearch}
+                                        onChangeText={this.updateFriendSearch}
                                         lightTheme={true}
 
 
@@ -275,12 +363,13 @@ export default class DashBoard extends React.Component {
                                         borderBottomColor={'transparent'}
                                         borderTopColor={'transparent'}
                                         searchIcon={<Button
-                                            onClick={this.handleSearch}
+                                            onClick={this.handleFriendSearch}
                                             icon={<Icon name="search" color="#3A85D6" size={40} shadowRadius={10}/>}
                                             buttonStyle={{
                                                 backgroundColor: "rgba(255, 255,255, 0.5)",
                                             }}
                                         />}
+                                        value={friend}
 
                                     />
                                     <Text style={{
@@ -340,7 +429,7 @@ export default class DashBoard extends React.Component {
                                                   backgroundColor: "none",
                                                   marginTop: 17,
                                                   marginLeft: 45
-                                              }} onPress={this.showFriends} />
+                                              }} onPress={() => this.acceptFriend(book, index)} />
                                               <Button  icon={<Icon name="remove" color="#FFFFFF" size={25} />} buttonStyle={{
                                                   alignSelf: 'flex-end',
                                                   position: 'absolute',
