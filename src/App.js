@@ -6,7 +6,6 @@ import Pokemon from './Pokemon';
 import Dashboard from "./Dashboard";
 import SignUp from "./SignUp";
 import FriendRequest from "./FriendRequest"
-//import Test from "./test";
 import { AppLoading} from 'expo';
 import {Asset} from "expo-asset";
 import * as Font from "expo-font";
