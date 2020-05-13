@@ -16,9 +16,9 @@ class Artist extends React.Component {
         const response =
         await axios.get("https://api.spotify.com/v1/artists/"+this.props.ArtistID,
             { headers: {'Content-Type': 'application/json',
-                        'Accept':'application/json',
-                        'Authorization': 'Bearer BQB81IRNo8eNwR9nW9buY0LPwcUfmdKNSnxsB3wC36iNNLOkwfiMihUXfhj5FEBve8edhef53BPIjZTbh-3FzQnIXLphg8Qmfx0c7GYkR5jSArnLRZou7Cv0d3eRjH3QLSPlHnF3YMl7L33qLg'
-                        }}
+                    'Accept':'application/json',
+                    'Authorization': "Bearer "+this.props.bearer.data.access_token
+                }}
         )
         this.setState({
             name : response.data.name,

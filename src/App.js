@@ -27,7 +27,8 @@ export default class App extends React.Component {
     isAuthenticated: false,
     ArtistID: null,
     id:null,
-      email: null
+      email: null,
+      bearer: null
   };
 
 
@@ -51,6 +52,10 @@ export default class App extends React.Component {
   selectArtistID = ArtistID =>{
       this.setState({ArtistID});
   }
+    selectBearer = bearer =>{
+        this.setState({bearer});
+    }
+
 
 
   render() {
@@ -97,7 +102,7 @@ export default class App extends React.Component {
                     path="/dashboard"
                     render={props => (
                         this.state.isAuthenticated === true
-                            ?<Dashboard {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id} email={this.state.email} ArtistID={this.state.ArtistID} selectArtistID={this.selectArtistID}
+                            ?<Dashboard {...props} userHasAuthenticated={this.userHasAuthenticated} id={this.state.id} email={this.state.email} ArtistID={this.state.ArtistID} selectArtistID={this.selectArtistID} bearer={this.state.bearer} selectBearer={this.selectBearer}
 
                             />
                             :alert(this.state.authenticated)
@@ -107,7 +112,7 @@ export default class App extends React.Component {
                 <Route
                     path="/artist"
                     render={props => (
-                      <Artist {...props} selectPokemon={this.selectPokemon} userHasAuthenticated={this.userHasAuthenticated} returnUserId={this.returnUserId} selectID={this.selectID} selectEmail={this.selectEmail} isAuthenticated={this.state.isAuthenticated} ArtistID={this.state.ArtistID} />
+                      <Artist {...props} selectPokemon={this.selectPokemon} userHasAuthenticated={this.userHasAuthenticated} returnUserId={this.returnUserId} selectID={this.selectID} selectEmail={this.selectEmail} isAuthenticated={this.state.isAuthenticated} ArtistID={this.state.ArtistID} bearer={this.state.bearer} selectBearer={this.selectBearer}/>
                   )}
                 />
                   <Route

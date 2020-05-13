@@ -128,7 +128,7 @@ export default class DashBoard extends React.Component {
 
     };
 
-    handleSearch = async search =>{
+    /*handleSearch = async search =>{
         console.log("search this now"+this.state.search);
         const response =
           await axios.get("https://api.spotify.com/v1/search?q="+this.state.search+"&type=artist&limit=1",
@@ -146,6 +146,43 @@ export default class DashBoard extends React.Component {
           
           this.props.history.push('/artist');
           
+    };*/
+    handleSearch = async search =>{
+        const bearer =
+            await axios.post("https://accounts.spotify.com/api/token", new URLSearchParams({
+		grant_type: "client_credentials",
+    }).toString(),
+                {
+                    headers: {
+                        "Accept": "application/json",
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Basic MTlkOGQ0MjhkNzUzNDM5YWI4OTczNjk2ZTZjNjY0NGI6ZGZhY2JmZWZlNGQ1NGYwYWIwMDYyYTNmY2NhYTdhZTc='
+                    },
+                    //   params: {
+                    //     grant_type: 'client_credentials'
+                    //}}
+                }
+            )
+
+        this.props.selectBearer(bearer)
+        console.log("search this now"+this.state.search);
+        console.log("the bearer is"+bearer.data.access_token);
+        const response =
+            await axios.get("https://api.spotify.com/v1/search?q="+this.state.search+"&type=artist&limit=1",
+                { headers: {'Content-Type': 'application/json',
+                        'Accept':'application/json',
+                        'Authorization': "Bearer "+bearer.data.access_token//'Bearer BQBQmqs03OwSdKWNES3WpgU4sUJ0MOeefDCcAz_5eLrafXY9WBvWdxbqAvYvRLtRsz6IBTXzA4zFIMyXKd0'
+                    }}
+            )
+        console.log(response.data.artists)
+        console.log(response.data.artists.items[0].id)
+        const artID = response.data.artists.items[0].id
+        //this.props.artistID = artID
+        this.props.selectArtistID(artID)
+        //call artist page with the id
+
+        this.props.history.push('/artist');
+
     };
     handleFriendSearch = async() =>{
         if (this.state.friend === '') return;
