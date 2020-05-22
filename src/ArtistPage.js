@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Image, View} from "react-native";
+import {Image, StyleSheet, View} from "react-native";
 import {Button, Text} from "react-native-elements";
 //import Icon from "react-native-vector-icons/Icon";
 //const id = "0TnOYISbd1XYRBk9myaseg";
@@ -53,7 +53,8 @@ class Artist extends React.Component {
             name: "M",
             followers: 0,
             popularity: 0,
-            artistDescription: []
+            artistDescription: [],
+            imageLink: ""
           }
 
     }
@@ -179,8 +180,11 @@ class Artist extends React.Component {
             name : response.data.name,
             followers : response.data.followers.total,
             popularity: response.data.popularity,
-            artistDescription: parseString//.response.artist.description.dom.children
+            artistDescription: parseString,//.response.artist.description.dom.children
+            imageLink:response.data.images[response.data.images.length-2].url
+
             });
+        console.log("THIS IS IMAGE LINK "+this.state.imageLink)
       /*  let homeArray = new Array(artistDescription.length);
         let i = 0
 
@@ -194,15 +198,49 @@ class Artist extends React.Component {
     }
     render() {
         return (
-            <div>
-                <h1><p>Artist Page</p></h1>
-                <h2>Name of the artist = {this.state.name}</h2>
-                <h3>Followers = {this.state.followers}</h3>
-                <h3>Popularity = {this.state.popularity}</h3>
-                <h3>artistDescription = {this.state.artistDescription}</h3>
-            </div>
+            <View style={styles.background}>
+                <View style={styles.rightContainer}>
+                    <View style={{marginTop: 100, flexDirection: 'column', marginRight: 70}}>
+                        <Image source={{uri: this.state.imageLink}} style={styles.artistPic}/>
+                        <h2>Name of the artist = {this.state.name}</h2>
+                        <h3>Followers = {this.state.followers}</h3>
+                        <h3>Popularity = {this.state.popularity}</h3>
+                        <h3>artistDescription = {this.state.artistDescription}</h3>
+                    </View>
+                </View>
+            </View>
         );
     }
 }
-
+const styles = StyleSheet.create({
+    background: {
+        backgroundColor: "rgba(41, 91,131, 1)",
+        flex: 1,
+        resizeMode: 'cover', // or 'stretch'
+        width: '100%',
+        height: '100%',
+        margin: 0,
+        alignItems: 'right',
+        justifyContent: 'center',
+        minWidth: 1000,
+        minHeight: 1000
+    },
+    rightContainer: {
+        width: '27.1%',
+        height: '100%',
+        backgroundColor: "rgba(15, 51,81, 1)",
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomRightRadius: 60,
+        borderTopRightRadius: 60
+    },
+    artistPic: {
+        width: 150,
+        height: 150,
+        borderRadius: 150 / 2,
+        overflow: "hidden",
+        borderWidth: 3,
+        borderColor: "rgba(41, 91,131, 1)"
+    }
+})
 export default Artist;
