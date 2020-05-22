@@ -10,6 +10,11 @@
             "StackName": "amplify-cure8bulat-bulatdev-144200",
             "StackId": "arn:aws:cloudformation:us-east-2:103831773854:stack/amplify-cure8bulat-bulatdev-144200/edd452d0-9a8e-11ea-8ab6-02c25da8714e",
             "AmplifyAppId": "d2nrnxpkamx98r"
+        },
+        "categories": {
+            "auth": {
+                "cure8bulatd5f05cf8": {}
+            }
         }
     }
 }

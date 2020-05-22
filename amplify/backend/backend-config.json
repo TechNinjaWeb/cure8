@@ -1,1 +1,58 @@
-{}
+{
+	"auth": {
+		"cure8bulatd5f05cf8": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"function": {
+		"usersTableTrigger630a623c": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "storage",
+					"resourceName": "usersTable",
+					"attributes": [
+						"Name",
+						"Arn",
+						"StreamArn"
+					]
+				}
+			]
+		}
+	},
+	"storage": {
+		"usersTable": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation"
+		},
+		"leagues": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation"
+		},
+		"Artists": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation"
+		}
+	},
+	"api": {
+		"cure8API": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authcure8bulatd5f05cf8"
+						}
+					}
+				}
+			}
+		}
+	}
+}

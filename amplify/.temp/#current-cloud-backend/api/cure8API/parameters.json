@@ -1,9 +1,0 @@
-{
-    "AppSyncApiName": "cure8API",
-    "AuthCognitoUserPoolId": {
-        "Fn::GetAtt": [
-            "authcognito82c87ba8",
-            "Outputs.UserPoolId"
-        ]
-    }
-}

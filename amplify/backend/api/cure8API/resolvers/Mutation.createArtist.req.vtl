@@ -1,0 +1,16 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        ## If object "id" should come from GraphQL arguments, change to $util.dynamodb.toDynamoDBJson($ctx.args.id)
+        "Name": { "S" : "${context.args.input.Name}" },
+    },
+    "attributeValues" : {
+        "spotifyID": {"S":"${context.args.input.spotifyID}"},
+        "curPrice": {"N":"${context.args.input.curPrice}"},
+        "Popularity": { "L": [ { "N" : "${context.args.input.Popularity}" }] },
+        "Price": { "L": [ { "N" : "${context.args.input.Price}" }] },
+        "Dates": { "L": [ { "S" : "${context.args.input.Dates}" }] },
+        "LastDateUpdated": {"S":"${context.args.input.LastDateUpdated}"}
+    }
+}

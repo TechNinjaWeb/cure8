@@ -43,7 +43,7 @@ import { Auth } from "aws-amplify";
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
-const poolData = {UserPoolId: "us-east-2_pgBKXdJOH", ClientId: "50i0qg409uni58jng27v826sfh"};
+const poolData = {UserPoolId: "us-east-2_iQRLHocbv", ClientId: "30iodqspi3o5v1jl6ejva9vtfg"};
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
 

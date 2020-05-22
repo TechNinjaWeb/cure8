@@ -1,0 +1,19 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key" : {
+         "Name": { "S" : "${context.args.input.Name}" },
+    },
+    "update" : {
+        "expression" : "SET spotifyID = :spotifyID, curPrice = :curPrice, Popularity = list_append(if_not_exists(Popularity, :emptyList), :Popularity), Price = list_append(if_not_exists(Price, :emptyList), :Price), Dates = list_append(if_not_exists(Dates, :emptyList), :Dates), LastDateUpdated = :LastDateUpdated",
+        "expressionValues" : {
+            ":emptyList": { "L" : [] },
+            ":spotifyID": {"S":"${context.args.input.spotifyID}"},
+            ":curPrice": {"N":"${context.args.input.curPrice}"},
+            ":Popularity": { "L": [ { "N" : "${context.args.input.Popularity}" }] },
+        	":Price": { "L": [ { "N" : "${context.args.input.Price}" }] },
+        	":Dates": { "L": [ { "S" : "${context.args.input.Dates}" }] },
+        	":LastDateUpdated": {"S":"${context.args.input.LastDateUpdated}"}
+        }
+    }
+}

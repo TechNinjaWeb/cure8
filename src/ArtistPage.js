@@ -5,6 +5,46 @@ import {Button, Text} from "react-native-elements";
 //import Icon from "react-native-vector-icons/Icon";
 //const id = "0TnOYISbd1XYRBk9myaseg";
 import XMLParser from 'react-xml-parser';
+import {API, graphqlOperation} from "aws-amplify";
+const ArtistLastDate = `
+     query GetArtist($Name: String!) {
+       getArtist(Name: $Name) {
+         LastDateUpdated
+  }
+}
+    `;
+const CreateArtist = `
+    mutation ($Name: String!, $spotifyID: ID!, $curPrice: Int!, $Popularity: Int!, $Price: Int!, $Dates: String!, $LastDateUpdated: String!){
+
+     createArtist(input: {
+        Name: $Name,
+        spotifyID: $spotifyID,
+        curPrice: $curPrice,
+        Popularity: $Popularity,
+        Price: $Price,
+        Dates: $Dates,
+        LastDateUpdated: $LastDateUpdated
+     }) {
+        Name
+     }
+    }
+    `;
+const UpdateArtist = `
+    mutation ($Name: String!, $spotifyID: ID!, $curPrice: Int!, $Popularity: Int!, $Price: Int!, $Dates: String!, $LastDateUpdated: String!){
+
+     updateArtist(input: {
+        Name: $Name,
+        spotifyID: $spotifyID,
+        curPrice: $curPrice,
+        Popularity: $Popularity,
+        Price: $Price,
+        Dates: $Dates,
+        LastDateUpdated: $LastDateUpdated
+     }) {
+        Name
+     }
+    }
+    `;
 class Artist extends React.Component {
     constructor(props) {
 
@@ -69,38 +109,72 @@ class Artist extends React.Component {
         var trimPosition = string.lastIndexOf(lookFor)+1;
         return string.substr(0,trimPosition);
     }
-    async componentDidMount(){
+    async componentDidMount() {
         const response =
-        await axios.get("https://api.spotify.com/v1/artists/"+this.props.ArtistID,
-            { headers: {'Content-Type': 'application/json',
-                    'Accept':'application/json',
-                    'Authorization': "Bearer "+this.props.bearer.data.access_token
-                }}
-        )
-       // const artistDescription =
-       //     await axios.get("https://api.genius.com/artists/16775",
-       //         { headers: {'Content-Type': 'application/json',
-       //                 'Accept':'application/json',
-       //                 'Authorization': "Bearer Pc6xVeaU5I6Dk58OFFPFWbjXQcyRExI85wgKrLEBHcQLj_9r39nowXtcO4fxi1sR",
-       //                 "Access-Control-Allow-Origin": "*"
-       //             }}
-       //     )
-            const artistDescription =
-                await axios.get("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=eminem&api_key=e9f3eadd91b4a99a0656318960d9d4f5",
-                    { headers: {'Content-Type': 'application/json',
-                            'Accept':'application/json',
-                        }}
-                )
+            await axios.get("https://api.spotify.com/v1/artists/" + this.props.ArtistID,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': "Bearer " + this.props.bearer.data.access_token
+                    }
+                }
+            )
+        // const artistDescription =
+        //     await axios.get("https://api.genius.com/artists/16775",
+        //         { headers: {'Content-Type': 'application/json',
+        //                 'Accept':'application/json',
+        //                 'Authorization': "Bearer Pc6xVeaU5I6Dk58OFFPFWbjXQcyRExI85wgKrLEBHcQLj_9r39nowXtcO4fxi1sR",
+        //                 "Access-Control-Allow-Origin": "*"
+        //             }}
+        //     )
+        const artistDescription =
+            await axios.get("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + response.data.name + "&api_key=e9f3eadd91b4a99a0656318960d9d4f5",
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    }
+                }
+            )
 
-       // var XMLParser = require('react-xml-parser');
-        console.log(artistDescription.data);
+        // var XMLParser = require('react-xml-parser');
+        //console.log(artistDescription.data);
         var jsonDataFromXml = new XMLParser().parseFromString(artistDescription.data);
-        var parseString = this.trimSentence(this.decode(jsonDataFromXml.children[0].children[14].children[2].value))
-      //  var parseString = require('xml2js').parseString;
-      //  parseString(artistDescription, function (err, result) {
-       //     console.dir(result);
-       // });
+        console.log(jsonDataFromXml);
+        var parseString = this.trimSentence(this.decode(jsonDataFromXml.children[0].children[jsonDataFromXml.children[0].children.length - 1].children[2].value))
+        //  var parseString = require('xml2js').parseString;
+        //  parseString(artistDescription, function (err, result) {
+        //     console.dir(result);
+        // });
         console.log(parseString);
+        var moment = require('moment-timezone');
+        var dateEST =moment().tz("America/New_York").format().substring(0,10);
+        try {
+            const params = {Name: response.data.name};
+            const date = await API.graphql(graphqlOperation(ArtistLastDate, params));
+            console.log("Last day updated: " + date.data.getArtist.LastDateUpdated);
+            if(date.data.getArtist.LastDateUpdated != dateEST){
+                const params2 = {Name: response.data.name,
+                    spotifyID: this.props.ArtistID,
+                    curPrice: response.data.popularity*100,
+                    Popularity: response.data.popularity,
+                    Price: response.data.popularity*100,
+                    Dates: dateEST,
+                    LastDateUpdated: dateEST};
+                console.log(await API.graphql(graphqlOperation(UpdateArtist, params2)));
+            }
+
+        }catch (err) {
+            const params = {Name: response.data.name,
+                spotifyID: this.props.ArtistID,
+                curPrice: response.data.popularity*100,
+                Popularity: response.data.popularity,
+                Price: response.data.popularity*100,
+                Dates: dateEST,
+                LastDateUpdated: dateEST};
+            console.log(await API.graphql(graphqlOperation(CreateArtist, params)));
+        }
         this.setState({
             name : response.data.name,
             followers : response.data.followers.total,
