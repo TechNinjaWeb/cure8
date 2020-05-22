@@ -1,0 +1,431 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "An auto-generated nested stack.",
+	"Metadata": {},
+	"Parameters": {
+		"AppSyncApiId": {
+			"Type": "String",
+			"Description": "The id of the AppSync API associated with this project."
+		},
+		"AppSyncApiName": {
+			"Type": "String",
+			"Description": "The name of the AppSync API",
+			"Default": "AppSyncSimpleTransform"
+		},
+		"env": {
+			"Type": "String",
+			"Description": "The environment name. e.g. Dev, Test, or Production",
+			"Default": "NONE"
+		},
+		"S3DeploymentBucket": {
+			"Type": "String",
+			"Description": "The S3 bucket containing all deployment assets for the project."
+		},
+		"S3DeploymentRootKey": {
+			"Type": "String",
+			"Description": "An S3 key relative to the S3DeploymentBucket that points to the root\nof the deployment directory."
+		}
+	},
+	"Resources": {
+		"QueryGetUsersResolver": {
+			"Type": "AWS::AppSync::Resolver",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"TypeName": "Query",
+				"FieldName": "getUsers",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.getUsers.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.getUsers.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"QueryGetUsersByEmailResolver": {
+			"Type": "AWS::AppSync::Resolver",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"TypeName": "Query",
+				"FieldName": "getUsersByEmail",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.getUsersByEmail.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.getUsersByEmail.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"MutationUpdateUsersResolver": {
+			"Type": "AWS::AppSync::Resolver",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"TypeName": "Mutation",
+				"FieldName": "updateUsers",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Mutation.updateUsers.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Mutation.updateUsers.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"getIDfromEmailFunction": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"Name": "getIDfromEmailFunction",
+				"FunctionVersion": "2018-05-29",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/getIDfromEmail.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/getIDfromEmail.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"addYourEmailToRequesterFriendsFunction": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"Name": "addYourEmailToRequesterFriendsFunction",
+				"FunctionVersion": "2018-05-29",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/addYourEmailToRequesterFriends.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/addYourEmailToRequesterFriends.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"addRequestersEmailToYourFriendsFunction": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"Name": "addRequestersEmailToYourFriendsFunction",
+				"FunctionVersion": "2018-05-29",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/addRequestersEmailToYourFriends.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/addRequestersEmailToYourFriends.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"deleteRequestFunction": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"Name": "deleteRequestFunction",
+				"FunctionVersion": "2018-05-29",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/deleteRequest.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/deleteRequest.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"MutationAddFriendResolver": {
+			"Type": "AWS::AppSync::Resolver",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"Kind": "PIPELINE",
+				"TypeName": "Mutation",
+				"FieldName": "addFriend",
+				"RequestMappingTemplate": "$util.qr($ctx.stash.put(\"email\", $ctx.args.input.email))\n$util.qr($ctx.stash.put(\"friendEmail\", $ctx.args.input.friendEmail))\n$util.qr($ctx.stash.put(\"id\", $ctx.args.input.id))\n$util.qr($ctx.stash.put(\"index\", $ctx.args.input.index)) \n{}",
+				"ResponseMappingTemplate": "$util.toJson($ctx.result)",
+				"PipelineConfig": {
+					"Functions": [
+						{
+							"Fn::GetAtt": [
+								"getIDfromEmailFunction",
+								"FunctionId"
+							]
+						},
+						{
+							"Fn::GetAtt": [
+								"addYourEmailToRequesterFriendsFunction",
+								"FunctionId"
+							]
+						},
+						{
+							"Fn::GetAtt": [
+								"addRequestersEmailToYourFriendsFunction",
+								"FunctionId"
+							]
+						},
+						{
+							"Fn::GetAtt": [
+								"deleteRequestFunction",
+								"FunctionId"
+							]
+						}
+					]
+				}
+			}
+		},
+		"MutationRejectFriendResolver": {
+			"Type": "AWS::AppSync::Resolver",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "UsersID",
+				"TypeName": "Mutation",
+				"FieldName": "rejectFriend",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Mutation.rejectFriend.req.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Mutation.rejectFriend.res.vtl",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							}
+						}
+					]
+				}
+			}
+		},
+		"MutationCreateLeagueResolver": {
+		"Type": "AWS::AppSync::Resolver",
+		"Properties": {
+			"ApiId": {
+				"Ref": "AppSyncApiId"
+			},
+			"DataSourceName": "leaguesTable",
+			"TypeName": "Mutation",
+			"FieldName": "createLeague",
+			"RequestMappingTemplateS3Location": {
+				"Fn::Sub": [
+					"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Mutation.createLeague.req.vtl",
+					{
+						"S3DeploymentBucket": {
+							"Ref": "S3DeploymentBucket"
+						},
+						"S3DeploymentRootKey": {
+							"Ref": "S3DeploymentRootKey"
+						}
+					}
+				]
+			},
+			"ResponseMappingTemplateS3Location": {
+				"Fn::Sub": [
+					"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Mutation.createLeague.res.vtl",
+					{
+						"S3DeploymentBucket": {
+							"Ref": "S3DeploymentBucket"
+						},
+						"S3DeploymentRootKey": {
+							"Ref": "S3DeploymentRootKey"
+						}
+					}
+				]
+			}
+		}
+	}
+	},
+	"Conditions": {
+		"HasEnvironmentParameter": {
+			"Fn::Not": [
+				{
+					"Fn::Equals": [
+						{
+							"Ref": "env"
+						},
+						"NONE"
+					]
+				}
+			]
+		},
+		"AlwaysFalse": {
+			"Fn::Equals": [
+				"true",
+				"false"
+			]
+		}
+	},
+	"Outputs": {
+		"EmptyOutput": {
+			"Description": "An empty output. You may delete this if you have at least one resource above.",
+			"Value": ""
+		}
+	}
+}

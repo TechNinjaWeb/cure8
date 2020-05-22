@@ -1,0 +1,177 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "cure8hybrid-20191106203250-authRole",
+			"UnauthRoleArn": "arn:aws:iam::103831773854:role/cure8hybrid-20191106203250-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::103831773854:role/cure8hybrid-20191106203250-authRole",
+			"Region": "us-east-2",
+			"DeploymentBucketName": "cure8hybrid-20191106203250-deployment",
+			"UnauthRoleName": "cure8hybrid-20191106203250-unauthRole",
+			"StackName": "cure8hybrid-20191106203250",
+			"StackId": "arn:aws:cloudformation:us-east-2:103831773854:stack/cure8hybrid-20191106203250/834aec00-00fe-11ea-a594-0ad7a569cb8c",
+			"AmplifyAppId": "d1vttkdrzm4bvz"
+		}
+	},
+	"auth": {
+		"cognito82c87ba8": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cure8hybrid-20191106203250-deployment/amplify-cfn-templates/auth/cognito82c87ba8-cloudformation-template.yml",
+				"logicalId": "authcognito82c87ba8"
+			},
+			"lastPushTimeStamp": "2020-02-02T19:01:15.089Z",
+			"output": {
+				"AppClientSecret": "ef2knrr1fg3dhijc4e8kiec9d3kjv4to0je616ms5ai41hcue7o",
+				"UserPoolId": "us-east-2_pgBKXdJOH",
+				"AppClientIDWeb": "50i0qg409uni58jng27v826sfh",
+				"AppClientID": "3j00do10cp0v00a9mts90tc80h",
+				"IdentityPoolId": "us-east-2:054c374f-a6d4-4ece-a5b8-af578b70e799",
+				"IdentityPoolName": "cognito82c87ba8_identitypool_82c87ba8__macos",
+				"UserPoolName": "cognito82c87ba8_userpool_82c87ba8"
+			},
+			"lastPushDirHash": "1kReNk2H/b0EKXx23dJ0uG911OQ="
+		}
+	},
+	"api": {
+		"cure8API": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "AMAZON_COGNITO_USER_POOLS",
+				"GraphQLAPIIdOutput": "yzmmgl6t4nenrkir5v5hebf2ni",
+				"GraphQLAPIEndpointOutput": "https://rvvwibgng5ghloi4uqxs2u3gga.appsync-api.us-east-2.amazonaws.com/graphql"
+			},
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cure8hybrid-20191106203250-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"logicalId": "apicure8API"
+			},
+			"lastPushTimeStamp": "2020-02-02T19:01:17.068Z",
+			"lastPushDirHash": "rPgXzAFH6vkHOPQ7jzbeWAi8fMc="
+		}
+	},
+	"storage": {
+		"cure8Dynamo": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cure8hybrid-20191106203250-deployment/amplify-cfn-templates/storage/cure8Dynamo-cloudformation-template.json",
+				"logicalId": "storagecure8Dynamo"
+			},
+			"lastPushTimeStamp": "2020-02-02T19:01:15.097Z",
+			"output": {
+				"PartitionKeyName": "email",
+				"Region": "us-east-2",
+				"Arn": "arn:aws:dynamodb:us-east-2:103831773854:table/Users-macos",
+				"PartitionKeyType": "S",
+				"Name": "Users-macos"
+			},
+			"lastPushDirHash": "rYP+orNxdnW/V+Iw5uczzJJsovk="
+		},
+		"UsersID": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cure8hybrid-20191106203250-deployment/amplify-cfn-templates/storage/UsersID-cloudformation-template.json",
+				"logicalId": "storageUsersID"
+			},
+			"lastPushTimeStamp": "2020-02-02T19:01:15.099Z",
+			"output": {
+				"PartitionKeyName": "id",
+				"Region": "us-east-2",
+				"Arn": "arn:aws:dynamodb:us-east-2:103831773854:table/UsersByID-macos",
+				"StreamArn": "arn:aws:dynamodb:us-east-2:103831773854:table/UsersByID-macos/stream/2019-12-28T08:28:46.486",
+				"PartitionKeyType": "S",
+				"Name": "UsersByID-macos"
+			},
+			"lastPushDirHash": "Gc7B7YrKE1a+66VlCRf1EqdO+Uw="
+		},
+		"dynamoLeagues": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cure8hybrid-20191106203250-deployment/amplify-cfn-templates/storage/dynamoLeagues-cloudformation-template.json",
+				"logicalId": "storagedynamoLeagues"
+			},
+			"lastPushTimeStamp": "2020-02-02T19:01:15.100Z",
+			"output": {
+				"PartitionKeyName": "leagueID",
+				"Region": "us-east-2",
+				"Arn": "arn:aws:dynamodb:us-east-2:103831773854:table/leaguesTable-macos",
+				"StreamArn": "arn:aws:dynamodb:us-east-2:103831773854:table/leaguesTable-macos/stream/2020-01-28T21:28:30.841",
+				"PartitionKeyType": "S",
+				"Name": "leaguesTable-macos"
+			},
+			"lastPushDirHash": "RpL96ypXtpDt7VyQby0DcWbMjD8="
+		}
+	},
+	"function": {
+		"cure8Lambda": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "storage",
+					"resourceName": "cure8Dynamo",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				},
+				{
+					"category": "storage",
+					"resourceName": "UsersID",
+					"attributes": [
+						"Name",
+						"Arn",
+						"StreamArn"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2019-11-08T04:42:57.256Z",
+			"lastPackageTimeStamp": "2019-12-28T08:39:19.039Z",
+			"distZipFilename": "cure8Lambda-63624139566d4a4d4b75-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cure8hybrid-20191106203250-deployment/amplify-cfn-templates/function/cure8Lambda-cloudformation-template.json",
+				"logicalId": "functioncure8Lambda"
+			},
+			"lastPushTimeStamp": "2020-02-02T19:01:15.101Z",
+			"output": {
+				"Region": "us-east-2",
+				"Arn": "arn:aws:lambda:us-east-2:103831773854:function:AddUser-macos",
+				"Name": "AddUser-macos"
+			},
+			"lastPushDirHash": "S0WdYYj2ZNAUQJ6or6AK+Op+vzc="
+		},
+		"listFriends": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "storage",
+					"resourceName": "cure8Dynamo",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2019-11-20T21:00:45.022Z",
+			"lastPackageTimeStamp": "2019-11-22T00:47:36.200Z",
+			"distZipFilename": "listFriends-1574383652-latest-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cure8hybrid-20191106203250-deployment/amplify-cfn-templates/function/listFriends-cloudformation-template.json",
+				"logicalId": "functionlistFriends"
+			},
+			"lastPushTimeStamp": "2020-02-02T19:01:15.102Z",
+			"output": {
+				"Region": "us-east-2",
+				"Arn": "arn:aws:lambda:us-east-2:103831773854:function:listFriends-macos",
+				"Name": "listFriends-macos"
+			},
+			"lastPushDirHash": "tIiRCGv5O0Eb9H1qOFP2ya5NmIM="
+		}
+	}
+}

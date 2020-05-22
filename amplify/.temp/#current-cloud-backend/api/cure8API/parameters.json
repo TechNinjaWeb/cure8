@@ -1,10 +1,8 @@
 {
     "AppSyncApiName": "cure8API",
-    "DynamoDBBillingMode": "PAY_PER_REQUEST",
-    "DynamoDBEnableServerSideEncryption": "false",
     "AuthCognitoUserPoolId": {
         "Fn::GetAtt": [
-            "authcure8bulatd5f05cf8",
+            "authcognito82c87ba8",
             "Outputs.UserPoolId"
         ]
     }

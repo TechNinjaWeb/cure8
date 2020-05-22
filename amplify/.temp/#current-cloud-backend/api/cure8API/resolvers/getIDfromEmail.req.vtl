@@ -1,0 +1,13 @@
+{
+    "version": "2017-02-28",
+    "operation": "Query",
+    "index" : "byEmail",
+    "query" : {
+        "expression": "email = :email",
+        "expressionValues" : {
+            ":email" : {
+                "S" : "${ctx.args.input.friendEmail}"
+            }
+        }
+    }
+}

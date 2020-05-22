@@ -1,0 +1,15 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "UpdateItem",
+    "key" : {
+        "id" : { "S" : "${ctx.args.input.id}" }
+    },
+    "update" : {
+        "expression" : "SET friends = list_append(if_not_exists(friends, :emptyList), :newfriends) ADD version :plusOne",
+        "expressionValues" : {
+            ":emptyList": { "L" : [] },
+            ":newfriends" : { "L": [ { "S" : "${ctx.args.input.friendEmail}" }] },
+            ":plusOne" : { "N" : 1 }
+        }
+    }
+}
