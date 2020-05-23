@@ -6,6 +6,8 @@ import {Button, Text} from "react-native-elements";
 //const id = "0TnOYISbd1XYRBk9myaseg";
 import XMLParser from 'react-xml-parser';
 import {API, graphqlOperation} from "aws-amplify";
+import { Dimensions } from 'react-native';
+const d = Dimensions.get("window")
 const ArtistLastDate = `
      query GetArtist($Name: String!) {
        getArtist(Name: $Name) {
@@ -54,7 +56,8 @@ class Artist extends React.Component {
             followers: 0,
             popularity: 0,
             artistDescription: [],
-            imageLink: ""
+            imageLink: "",
+            genres: []
           }
 
     }
@@ -181,7 +184,8 @@ class Artist extends React.Component {
             followers : response.data.followers.total,
             popularity: response.data.popularity,
             artistDescription: parseString,//.response.artist.description.dom.children
-            imageLink:response.data.images[response.data.images.length-2].url
+            imageLink:response.data.images[response.data.images.length-2].url,
+            genres: response.data.genres
 
             });
         console.log("THIS IS IMAGE LINK "+this.state.imageLink)
@@ -200,8 +204,32 @@ class Artist extends React.Component {
         return (
             <View style={styles.background}>
                 <View style={styles.rightContainer}>
-                    <View style={{marginTop: 100, flexDirection: 'column', marginRight: 70}}>
+                    <View style={{ marginTop: 100, flexDirection: 'column'}}>
+                        <View style={{ marginLeft: 75,
+                            marginRight: 75, alignItems: 'center',
+                            justifyContent: 'center',}}>
                         <Image source={{uri: this.state.imageLink}} style={styles.artistPic}/>
+                        </View>
+                        <Text style={{
+                            color:'#fff', fontSize:22, marginLeft: 37.5,
+                            marginRight: 37.5, marginTop: 20,fontFamily:"Lucida Grande", textAlign: "center"}}>{this.state.name}
+                        </Text>
+                        <Text style={{
+                            color:'#fff', fontSize:15, marginLeft: 50,
+                            marginRight: 50, marginTop: 10,fontFamily:"Lucida Grande"}}>{this.state.artistDescription}
+                        </Text>
+                    <View style={{ marginLeft: 50, marginRight: 50, marginTop: 25, flexDirection: 'row', flexWrap: 'wrap'}}>
+                        <Text style={{
+                            color:'#fff', fontSize:18,fontFamily:"Lucida Grande"}}>Genres:
+                        </Text>
+                        {this.state.genres.map((genre) => (
+                            <View style={{marginLeft: 15, backgroundColor: "rgba(227, 106,43, 1)", marginBottom: 10}}>
+                                <Text style={{
+                                    color:'#fff', fontSize:16, fontFamily:"Lucida Grande", padding: 5}}>{genre}
+                                </Text>
+                            </View>
+                        ))}
+                    </View>
                         <h2>Name of the artist = {this.state.name}</h2>
                         <h3>Followers = {this.state.followers}</h3>
                         <h3>Popularity = {this.state.popularity}</h3>
@@ -226,11 +254,12 @@ const styles = StyleSheet.create({
         minHeight: 1000
     },
     rightContainer: {
-        width: '27.1%',
+        width: d.width*0.271,
         height: '100%',
+        maxWidth: '100%',
         backgroundColor: "rgba(15, 51,81, 1)",
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         borderBottomRightRadius: 60,
         borderTopRightRadius: 60
     },
@@ -240,7 +269,7 @@ const styles = StyleSheet.create({
         borderRadius: 150 / 2,
         overflow: "hidden",
         borderWidth: 3,
-        borderColor: "rgba(41, 91,131, 1)"
+        borderColor: "rgba(13, 39,58, 1)"
     }
 })
 export default Artist;
