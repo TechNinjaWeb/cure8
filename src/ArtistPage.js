@@ -1,17 +1,23 @@
 import React from 'react';
 import axios from 'axios';
-import {Image, StyleSheet, View} from "react-native";
+import {Image, Platform, StyleSheet, View} from "react-native";
 import {Button, Text} from "react-native-elements";
 //import Icon from "react-native-vector-icons/Icon";
 //const id = "0TnOYISbd1XYRBk9myaseg";
 import XMLParser from 'react-xml-parser';
 import {API, graphqlOperation} from "aws-amplify";
 import { Dimensions } from 'react-native';
-const d = Dimensions.get("window")
+const d = Dimensions.get("window");
+import {
+    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+} from 'recharts';
 const ArtistLastDate = `
      query GetArtist($Name: String!) {
        getArtist(Name: $Name) {
-         LastDateUpdated
+         LastDateUpdated,
+         Price,
+         Dates
+         
   }
 }
     `;
@@ -56,8 +62,12 @@ class Artist extends React.Component {
             followers: 0,
             popularity: 0,
             artistDescription: [],
+            price: [],
+            dates: [],
             imageLink: "",
-            genres: []
+            genres: [],
+            graphData: [],
+            showPriceGraph: true
           }
 
     }
@@ -158,6 +168,7 @@ class Artist extends React.Component {
             const params = {Name: response.data.name};
             const date = await API.graphql(graphqlOperation(ArtistLastDate, params));
             console.log("Last day updated: " + date.data.getArtist.LastDateUpdated);
+            this.setState({ price: date.data.getArtist.Price, dates: date.data.getArtist.Dates });
             if(date.data.getArtist.LastDateUpdated != dateEST){
                 const params2 = {Name: response.data.name,
                     spotifyID: this.props.ArtistID,
@@ -166,7 +177,11 @@ class Artist extends React.Component {
                     Price: response.data.popularity*100,
                     Dates: dateEST,
                     LastDateUpdated: dateEST};
-                console.log(await API.graphql(graphqlOperation(UpdateArtist, params2)));
+                await API.graphql(graphqlOperation(UpdateArtist, params2));
+            }else{
+                if(this.state.dates.length==1){
+                    this.setState({showPriceGraph:false});
+                }
             }
 
         }catch (err) {
@@ -177,16 +192,48 @@ class Artist extends React.Component {
                 Price: response.data.popularity*100,
                 Dates: dateEST,
                 LastDateUpdated: dateEST};
+            this.setState({ showPriceGraph: false });
             console.log(await API.graphql(graphqlOperation(CreateArtist, params)));
         }
+        const data = [];
+         /*   {
+                name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
+            },
+            {
+                name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
+            },
+            {
+                name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
+            },
+            {
+                name: 'Page D', uv: 2780, pv: 3908, amt: 2000,
+            },
+            {
+                name: 'Page E', uv: 1890, pv: 4800, amt: 2181,
+            },
+            {
+                name: 'Page F', uv: 2390, pv: 3800, amt: 2500,
+            },
+            {
+                name: 'Page G', uv: 3490, pv: 4300, amt: 2100,
+            },*/
+        console.log("-----");
+        console.log(this.state.dates);
+        console.log(this.state.price);
+        console.log("-----");
+
+        for(var i = 0; i<this.state.price.length; i++) {
+            data.push({name: this.state.dates[i], price: this.state.price[i]});
+        }
+        console.log(data);
         this.setState({
             name : response.data.name,
             followers : response.data.followers.total,
             popularity: response.data.popularity,
             artistDescription: parseString,//.response.artist.description.dom.children
             imageLink:response.data.images[response.data.images.length-2].url,
-            genres: response.data.genres
-
+            genres: response.data.genres,
+            graphData: data
             });
         console.log("THIS IS IMAGE LINK "+this.state.imageLink)
       /*  let homeArray = new Array(artistDescription.length);
@@ -198,7 +245,7 @@ class Artist extends React.Component {
         }
         this.state.artistDescription = homeArray
         console.log(response.data)*/
-        console.log(this.state.artistDescription)
+        console.log(this.state.artistDescription);
     }
     render() {
         return (
@@ -230,6 +277,30 @@ class Artist extends React.Component {
                             </View>
                         ))}
                     </View>
+                        {this.state.showPriceGraph === true &&(
+                        <View>
+                            <LineChart
+                                width={500}
+                                height={300}
+                                data={this.state.graphData}
+                                margin={{
+                                    top: 5, right: 30, left: 20, bottom: 5,
+                                }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Line type="monotone" dataKey="price" stroke="#8884d8" activeDot={{ r: 8 }} />
+                            </LineChart>
+                        </View>
+                        )}
+                        {this.state.showPriceGraph === false &&(
+                            <View>
+                                <Text>NO DATA AVAILABLE</Text>
+                            </View>
+                        )}
                         <h2>Name of the artist = {this.state.name}</h2>
                         <h3>Followers = {this.state.followers}</h3>
                         <h3>Popularity = {this.state.popularity}</h3>
