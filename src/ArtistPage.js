@@ -164,27 +164,11 @@ class Artist extends React.Component {
         console.log(parseString);
         var moment = require('moment-timezone');
         var dateEST =moment().tz("America/New_York").format().substring(0,10);
-        try {
-            const params = {Name: response.data.name};
-            const date = await API.graphql(graphqlOperation(ArtistLastDate, params));
-            console.log("Last day updated: " + date.data.getArtist.LastDateUpdated);
-            this.setState({ price: date.data.getArtist.Price, dates: date.data.getArtist.Dates });
-            if(date.data.getArtist.LastDateUpdated != dateEST){
-                const params2 = {Name: response.data.name,
-                    spotifyID: this.props.ArtistID,
-                    curPrice: response.data.popularity*100,
-                    Popularity: response.data.popularity,
-                    Price: response.data.popularity*100,
-                    Dates: dateEST,
-                    LastDateUpdated: dateEST};
-                await API.graphql(graphqlOperation(UpdateArtist, params2));
-            }else{
-                if(this.state.dates.length==1){
-                    this.setState({showPriceGraph:false});
-                }
-            }
-
-        }catch (err) {
+        const params = {Name: response.data.name};
+        const date = await API.graphql(graphqlOperation(ArtistLastDate, params));
+        console.log(date.data.getArtist);
+        if(date.data.getArtist == null){
+            console.log("Check 3");
             const params = {Name: response.data.name,
                 spotifyID: this.props.ArtistID,
                 curPrice: response.data.popularity*100,
@@ -194,7 +178,30 @@ class Artist extends React.Component {
                 LastDateUpdated: dateEST};
             this.setState({ showPriceGraph: false });
             console.log(await API.graphql(graphqlOperation(CreateArtist, params)));
+        }else {
+            if (date.data.getArtist.LastDateUpdated != dateEST) {
+                const params2 = {
+                    Name: response.data.name,
+                    spotifyID: this.props.ArtistID,
+                    curPrice: response.data.popularity * 100,
+                    Popularity: response.data.popularity,
+                    Price: response.data.popularity * 100,
+                    Dates: dateEST,
+                    LastDateUpdated: dateEST
+                };
+                await API.graphql(graphqlOperation(UpdateArtist, params2));
+                console.log("Check 1.5");
+                this.setState({price: date.data.getArtist.Price, dates: date.data.getArtist.Dates});
+            } else {
+                console.log("Check 2");
+                if (date.data.getArtist.Dates.length == 1) {
+                    this.setState({showPriceGraph: false});
+                } else {
+                    this.setState({price: date.data.getArtist.Price, dates: date.data.getArtist.Dates});
+                }
+            }
         }
+
         const data = [];
          /*   {
                 name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
@@ -221,10 +228,59 @@ class Artist extends React.Component {
         console.log(this.state.dates);
         console.log(this.state.price);
         console.log("-----");
-
-        for(var i = 0; i<this.state.price.length; i++) {
-            data.push({name: this.state.dates[i], price: this.state.price[i]});
+        var dateEST2 =moment().tz("America/New_York").format().substring(0,10);
+        var today = moment(dateEST2);
+        const sevenDays = [];
+        sevenDays[6] = dateEST2;
+        var index = 1;
+        for(var k = 5; k>=0; k--) {
+            var temp = today.subtract(index, 'days').format().substring(0,10);
+            console.log(temp);
+            sevenDays[k]=temp;
         }
+        console.log(sevenDays);
+     //   for(var i = 0; i<this.state.dates.length; i++) {
+     //       var day = moment(this.state.dates[i]);
+     //       this.state.dates[i] = day.format("MM/DD")
+     //   }
+        var exist = 0;
+        var firstNonnullValueCheck = 0;
+        if(this.state.price.length>7){
+            for (var j = 0; j < sevenDays.length; j++) {
+                exist = 0;
+                for (var i = this.state.price.length-7; i < this.state.price.length; i++) {
+
+                    if(sevenDays[j]===this.state.dates[i]){
+                        var day = moment(this.state.dates[i]);
+                        data.push({name: day.format("MM/DD"), price: this.state.price[i]});
+                        exist =1;
+                        firstNonnullValueCheck = 1;
+                    }
+                }
+                if(exist === 0 && firstNonnullValueCheck=== 1){
+                    var day = moment(sevenDays[j]);
+                    data.push({name: day.format("MM/DD")});
+                }
+
+            }
+        }else {
+            for (var j = 0; j < sevenDays.length; j++) {
+                exist = 0;
+                for (var i = 0; i < this.state.price.length; i++) {
+                    if(sevenDays[j]===this.state.dates[i]){
+                        var day = moment(this.state.dates[i]);
+                        data.push({name: day.format("MM/DD"), price: this.state.price[i]});
+                        exist =1;
+                        firstNonnullValueCheck = 1;
+                    }
+                }
+                if(exist === 0 && firstNonnullValueCheck=== 1){
+                    var day = moment(sevenDays[j]);
+                    data.push({name: day.format("MM/DD")});
+                }
+            }
+        }
+
         console.log(data);
         this.setState({
             name : response.data.name,
@@ -246,6 +302,10 @@ class Artist extends React.Component {
         this.state.artistDescription = homeArray
         console.log(response.data)*/
         console.log(this.state.artistDescription);
+    }
+    renderColorfulLegendText(value, entry) {
+        const color  = "#FFF";
+        return <span style={{ color }}>{value}</span>;
     }
     render() {
         return (
@@ -278,21 +338,23 @@ class Artist extends React.Component {
                         ))}
                     </View>
                         {this.state.showPriceGraph === true &&(
-                        <View>
+                        <View style={{paddingTop: 80}}>
                             <LineChart
-                                width={500}
-                                height={300}
+                                width={0.9*d.width*0.271}
+                                height={0.2 * d.height}
                                 data={this.state.graphData}
                                 margin={{
-                                    top: 5, right: 30, left: 20, bottom: 5,
+                                    top: 10, right: 30, left: 30, bottom: 5,
                                 }}
                             >
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis />
+                                <CartesianGrid strokeDasharray="3 3" stroke="white"/>
+                                <XAxis dataKey="name" stroke="white"/>
+                                <YAxis stroke="white"  unit='$'/>
                                 <Tooltip />
-                                <Legend />
-                                <Line type="monotone" dataKey="price" stroke="#8884d8" activeDot={{ r: 8 }} />
+                                <Legend payload={[
+                                    { value: 'Price of contract with '+ this.state.name, type: 'line', color: 'rgba(227, 106,43, 1' }
+                                ]} formatter={this.renderColorfulLegendText}/>
+                                <Line connectNulls type="monotone" dataKey="price" stroke="rgba(227, 106,43, 1)" fill="rgba(227, 106,43, 1)" activeDot={{ r: 8 }} />
                             </LineChart>
                         </View>
                         )}
@@ -301,10 +363,6 @@ class Artist extends React.Component {
                                 <Text>NO DATA AVAILABLE</Text>
                             </View>
                         )}
-                        <h2>Name of the artist = {this.state.name}</h2>
-                        <h3>Followers = {this.state.followers}</h3>
-                        <h3>Popularity = {this.state.popularity}</h3>
-                        <h3>artistDescription = {this.state.artistDescription}</h3>
                     </View>
                 </View>
             </View>
