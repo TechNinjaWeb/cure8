@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Image, Platform, StyleSheet, View} from "react-native";
+import {Image, Platform, StyleSheet, TouchableOpacity, View} from "react-native";
 import {Button, Text} from "react-native-elements";
 //import Icon from "react-native-vector-icons/Icon";
 //const id = "0TnOYISbd1XYRBk9myaseg";
@@ -11,6 +11,7 @@ const d = Dimensions.get("window");
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
+import {LinearGradient} from "expo-linear-gradient";
 const ArtistLastDate = `
      query GetArtist($Name: String!) {
        getArtist(Name: $Name) {
@@ -330,7 +331,7 @@ class Artist extends React.Component {
         return (
             <View style={styles.background}>
                 <View style={styles.rightContainer}>
-                    <View style={{ marginTop: 100, flexDirection: 'column'}}>
+                    <View style={{ marginTop: 70, flexDirection: 'column'}}>
                         <View style={{ marginLeft: 75,
                             marginRight: 75, alignItems: 'center',
                             justifyContent: 'center',}}>
@@ -395,6 +396,14 @@ class Artist extends React.Component {
                             marginRight: 50}}>{this.state.sign+"$"+this.state.theDif}
                         </Text>
                         </View>
+                        <TouchableOpacity style={{borderRadius: 100,marginTop: 30, height:'9%',backgroundColor: 'rgba(227, 106,43, 1)',marginLeft: 50,
+                            marginRight: 50}}>
+                                <View style={styles.circleGradient}>
+                                    <Text style={{fontSize: 30,
+                                        fontWeight: 'bold',
+                                        color: 'rgba(15, 51,81, 1)'}}>BUY NOW</Text>
+                                </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -431,6 +440,15 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         borderWidth: 3,
         borderColor: "rgba(13, 39,58, 1)"
+    },
+    circleGradient: {
+
+        textAlign: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 23
+
+
     }
 })
 export default Artist;
