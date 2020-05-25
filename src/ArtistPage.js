@@ -338,7 +338,7 @@ class Artist extends React.Component {
                         ))}
                     </View>
                         {this.state.showPriceGraph === true &&(
-                        <View style={{paddingTop: 80}}>
+                        <View style={{paddingTop: 50}}>
                             <LineChart
                                 width={0.9*d.width*0.271}
                                 height={0.2 * d.height}
@@ -359,10 +359,14 @@ class Artist extends React.Component {
                         </View>
                         )}
                         {this.state.showPriceGraph === false &&(
-                            <View>
+                            <View style={{paddingTop: 50}}>
                                 <Text>NO DATA AVAILABLE</Text>
                             </View>
                         )}
+                        <Text style={{
+                            color:'#fff', fontSize:15, fontFamily:"Lucida Grande", marginTop: 10, textAlign: "left", marginLeft: 50,
+                            marginRight: 50}}>{this.state.dates[this.state.dates.length-1]}
+                        </Text>
                     </View>
                 </View>
             </View>

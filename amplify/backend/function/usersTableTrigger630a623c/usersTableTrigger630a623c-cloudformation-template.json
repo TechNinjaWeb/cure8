@@ -72,7 +72,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-cure8bulat-bulatdev-144200-deployment",
-					"S3Key": "amplify-builds/usersTableTrigger630a623c-495977516f4258313657-build.zip"
+					"S3Key": "amplify-builds/usersTableTrigger630a623c-73366b68524254363658-build.zip"
 				}
 			}
 		},

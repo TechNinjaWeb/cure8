@@ -113,6 +113,8 @@ export default class DashBoard extends React.Component {
             idOfFriend:'',
             friend2: '',
             friendRequestsList: [],
+            hasFriendsAfterSignUp: 1,
+            hasRequestsAfterSignUp: 1
 
         };
 
@@ -199,31 +201,41 @@ export default class DashBoard extends React.Component {
                 alert("no such user")
                 throw "no such user"
             }
+            try{
+                for (var i = 0; i < this.state.friendList.length; i++) {
+                    if (this.state.friendList[i] == this.state.friend) {
+                        alert("the user is already your friend")
+                        throw "the user is already your friend"
+                    }
 
-            for(var i = 0; i<this.state.friendList.length;i++){
-                if (this.state.friendList[i]==this.state.friend){
-                    alert("the user is already your friend")
-                    throw "the user is already your friend"
                 }
-
+            }catch(err){
+                
             }
-            for(var i = 0; i<this.state.friendRequestsList.length;i++){
-                if (this.state.friendRequestsList[i]==this.state.friend){
-                    alert("the user has already sent you a friend request")
-                    throw "the user has already sent you a friend request"
+            try {
+                for (var i = 0; i < this.state.friendRequestsList.length; i++) {
+                    if (this.state.friendRequestsList[i] == this.state.friend) {
+                        alert("the user has already sent you a friend request")
+                        throw "the user has already sent you a friend request"
+                    }
+
                 }
-
+            }catch (err) {
+                
             }
-
+            try {
             const params2 = { id: this.state.idOfFriend.data.getUsersByEmail.id };
             const friendRequestsOfThatUser = await API.graphql(graphqlOperation(getUsersFriendRequests,params2));
             const friendRequests = Array.from(friendRequestsOfThatUser.data.getUsers.friendRequests)
-            for(var j = 0; j<friendRequests.length;j++){
-                if (friendRequests[j]==this.props.email){
-                    alert("You've already sent a friend request to that user")
-                    throw "You've already sent a friend request to that user"
-                }
+                for (var j = 0; j < friendRequests.length; j++) {
+                    if (friendRequests[j] == this.props.email) {
+                        alert("You've already sent a friend request to that user")
+                        throw "You've already sent a friend request to that user"
+                    }
 
+                }
+            }catch (err) {
+                
             }
             try {
                 /*const books = [...this.state.friend, book];
@@ -261,19 +273,26 @@ export default class DashBoard extends React.Component {
         this.props.history.push("/");
     }
     showFriends = async event => {
-
-        const params = { id: this.props.id };
-        const books = await API.graphql(graphqlOperation(ListUsers,params));
-        console.log('books: ', books);
-        console.log('after test');
-        this.setState({ friendList: Array.from(books.data.getUsers.friends)});
-        console.log(this.state.friendList);
-
-        const books2 = await API.graphql(graphqlOperation(getUsersFriendRequests,params));
-        console.log('requests: ', books2);
-        this.setState({ friendRequestsList: Array.from(books2.data.getUsers.friendRequests)});
-        console.log(this.state.friendRequestsList);
-
+        try {
+            const params = {id: this.props.id};
+            const books = await API.graphql(graphqlOperation(ListUsers, params));
+            console.log('books: ', books);
+            console.log('after test');
+            this.setState({friendList: Array.from(books.data.getUsers.friends)});
+            console.log(this.state.friendList);
+        }catch (err) {
+               this.state.hasFriendsAfterSignUp = false;
+        }
+        try {
+            const params = {id: this.props.id};
+            const books2 = await API.graphql(graphqlOperation(getUsersFriendRequests, params));
+            console.log('requests: ', books2);
+            this.setState({friendRequestsList: Array.from(books2.data.getUsers.friendRequests)});
+            console.log(this.state.friendRequestsList);
+        }catch (err) {
+            alert("error in friend request");
+            this.state.hasRequestsAfterSignUp = false;
+        }
         this.setState({isFriendsModalVisible: !this.state.isFriendsModalVisible});
     }
     showInvites = async event => {
@@ -429,7 +448,7 @@ export default class DashBoard extends React.Component {
                                     <Text style={{
                                           color:'#fff', fontSize:22, marginTop: 20,fontFamily:"Lucida Grande"}}>My Friends:
                                     </Text>
-                                      {this.state.friendList.map((book, index) => (
+                                      {this.state.hasFriendsAfterSignUp &&this.state.friendList.map((book, index) => (
                                           <View key={index} style={styles.book}>
                                               <Image
                                                   source={require('../assets/postyProfilePic.png')}
@@ -465,10 +484,15 @@ export default class DashBoard extends React.Component {
 
                                           </View>
                                       ))}
+                                      {!this.state.hasFriendsAfterSignUp &&(
+                                          <Text style={{
+                                              color:'#fff', fontSize:22, marginTop: 10,fontFamily:"Lucida Grande"}}>No friends
+                                          </Text>
+                                      )}
                                       <Text style={{
                                           color:'#fff', fontSize:22, marginTop: 20,fontFamily:"Lucida Grande"}}>Friend Invites:
                                       </Text>
-                                      {this.state.friendRequestsList.map((book, index) => (
+                                      {this.state.hasRequestsAfterSignUp &&this.state.friendRequestsList.map((book, index) => (
                                           <View key={index} style={styles.book}>
                                               <Image
                                                   source={require('../assets/postyProfilePic.png')}
@@ -495,6 +519,11 @@ export default class DashBoard extends React.Component {
                                               }} onPress={() => this.rejectFriend(index)} />
                                           </View>
                                       ))}
+                                      {!this.state.hasRequestsAfterSignUp &&(
+                                          <Text style={{
+                                              color:'#fff', fontSize:22, marginTop: 10,fontFamily:"Lucida Grande"}}>No friend requests
+                                          </Text>
+                                      )}
                                   </View>
                                 </View>
                                 </ImageBackground>
