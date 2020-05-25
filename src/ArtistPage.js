@@ -292,6 +292,14 @@ class Artist extends React.Component {
         }else{
             this.setState({sign: "+"});
         }
+        var genres = [];
+        for(var h = 0; h<response.data.genres.length; h++){
+            if(h === 3){
+                break;
+            }
+            genres.push(response.data.genres[h]);
+        }
+        console.log(response.data.genres);
         this.setState({theDif: Math.abs(this.state.price[len-1]-this.state.price[len-2])});
         this.setState({
             name : response.data.name,
@@ -299,7 +307,7 @@ class Artist extends React.Component {
             popularity: response.data.popularity,
             artistDescription: parseString,//.response.artist.description.dom.children
             imageLink:response.data.images[response.data.images.length-2].url,
-            genres: response.data.genres,
+            genres: genres,
             graphData: data
             });
         console.log("THIS IS IMAGE LINK "+this.state.imageLink)
