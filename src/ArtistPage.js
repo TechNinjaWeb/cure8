@@ -67,7 +67,10 @@ class Artist extends React.Component {
             imageLink: "",
             genres: [],
             graphData: [],
-            showPriceGraph: true
+            showPriceGraph: true,
+            today: "",
+            sign: "",
+            theDif: 0
           }
 
     }
@@ -164,6 +167,7 @@ class Artist extends React.Component {
         console.log(parseString);
         var moment = require('moment-timezone');
         var dateEST =moment().tz("America/New_York").format().substring(0,10);
+        this.setState({today:moment().tz("America/New_York").format('LL')})
         const params = {Name: response.data.name};
         const date = await API.graphql(graphqlOperation(ArtistLastDate, params));
         console.log(date.data.getArtist);
@@ -282,6 +286,13 @@ class Artist extends React.Component {
         }
 
         console.log(data);
+        var len = this.state.price.length;
+        if(this.state.price[len-1]<this.state.price[len-2]){
+            this.setState({sign: "-"});
+        }else{
+            this.setState({sign: "+"});
+        }
+        this.setState({theDif: Math.abs(this.state.price[len-1]-this.state.price[len-2])});
         this.setState({
             name : response.data.name,
             followers : response.data.followers.total,
@@ -365,8 +376,17 @@ class Artist extends React.Component {
                         )}
                         <Text style={{
                             color:'#fff', fontSize:15, fontFamily:"Lucida Grande", marginTop: 10, textAlign: "left", marginLeft: 50,
-                            marginRight: 50}}>{this.state.dates[this.state.dates.length-1]}
+                            marginRight: 50}}>{this.state.today}
                         </Text>
+                        <View style={{flexDirection: 'row'}}>
+                        <Text style={{
+                            color:'#fff',fontWeight: "bold", fontSize:40, fontFamily:"Lucida Grande", marginTop: 5, textAlign: "left", marginLeft: 50}}>{"$"+this.state.price[this.state.price.length-1]}
+                        </Text>
+                        <Text style={{
+                            color:'#fff',fontWeight: "bold", fontSize:20, fontFamily:"Lucida Grande", marginTop: 5, textAlign: "left",
+                            marginRight: 50}}>{this.state.sign+"$"+this.state.theDif}
+                        </Text>
+                        </View>
                     </View>
                 </View>
             </View>
