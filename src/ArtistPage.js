@@ -397,12 +397,12 @@ class Artist extends React.Component {
                         </Text>
                         </View>
                         <TouchableOpacity style={{borderRadius: 100,marginTop: 30, height:'9%',backgroundColor: 'rgba(227, 106,43, 1)',marginLeft: 50,
-                            marginRight: 50}}>
-                                <View style={styles.circleGradient}>
+                            marginRight: 50,justifyContent: 'center',
+                            alignItems: 'center'}}>
                                     <Text style={{fontSize: 30,
                                         fontWeight: 'bold',
                                         color: 'rgba(15, 51,81, 1)'}}>BUY NOW</Text>
-                                </View>
+
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -440,15 +440,6 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         borderWidth: 3,
         borderColor: "rgba(13, 39,58, 1)"
-    },
-    circleGradient: {
-
-        textAlign: 'center',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 23
-
-
     }
 })
 export default Artist;
