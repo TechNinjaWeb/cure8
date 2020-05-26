@@ -427,17 +427,17 @@ class Artist extends React.Component {
                     </Text>
                     {this.state.tracksData.map((song) => (
                         <View>
-                            <View style={{backgroundColor: "rgba(23, 51,79, 1)", width: '100%', height: '0.15%', marginTop: 15}}></View>
-                            <View style={{flexDirection:"row"}}>
+                            <View style={{backgroundColor: "rgba(23, 51,79, 1)", width: '100%', height: '0.4%', marginTop: 15, marginBottom: 15}}></View>
+                            <View style={{flexDirection:"row", marginLeft: 5}}>
                                 <Image source={{uri: song.album.images[1].url}} style={styles.trackPic}/>
-                                <View style={{flexDirection:"column"}}>
+                                <View style={{flexDirection:"column", marginLeft: 20, marginTop: 8}}>
                                     <Text style={{
-                                        color:'#fff', fontSize:16, fontFamily:"Lucida Grande", paddingBottom: 5}}>{song.name}
+                                        color:'#fff', fontSize:16, fontWeight: "bold",fontFamily:"Lucida Grande", paddingBottom: 8}}>{song.name}
                                     </Text>
                                     <View style={{flexDirection:"row"}}>
                                         {song.artists.map((artist, index) => (
                                             <Text style={{
-                                                color:'#fff', fontSize:16, fontFamily:"Lucida Grande"}}>
+                                                color:'rgba(193, 193, 193, 1)', fontSize:16, fontFamily:"Lucida Grande"}}>
                                                 <span  key={`demo_snap_${index}`}>{(index ? ', ' : '') + artist.name}</span>
                                             </Text>
                                         ))}
@@ -492,8 +492,8 @@ const styles = StyleSheet.create({
         marginTop: 60
     },
     trackPic:{
-        width: 50,
-        height: 50
+        width: 60,
+        height: 60
     }
 
 })
