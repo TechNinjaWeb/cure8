@@ -130,6 +130,11 @@ class Artist extends React.Component {
         var trimPosition = string.lastIndexOf(lookFor)+1;
         return string.substr(0,trimPosition);
     }
+     millisToMinutesAndSeconds(millis) {
+        var minutes = Math.floor(millis / 60000);
+        var seconds = ((millis % 60000) / 1000).toFixed(0);
+        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    }
     async componentDidMount() {
         const response =
             await axios.get("https://api.spotify.com/v1/artists/" + this.props.ArtistID,
@@ -427,7 +432,7 @@ class Artist extends React.Component {
                     </Text>
                     {this.state.tracksData.map((song) => (
                         <View>
-                            <View style={{backgroundColor: "rgba(23, 51,79, 1)", width: '100%', height: '0.4%', marginTop: 15, marginBottom: 15}}></View>
+                            <View style={{backgroundColor: "rgba(23, 51,79, 1)", width: '80%', height: '0.4%', marginTop: 15, marginBottom: 15}}></View>
                             <View style={{flexDirection:"row", marginLeft: 5}}>
                                 <Image source={{uri: song.album.images[1].url}} style={styles.trackPic}/>
                                 <View style={{flexDirection:"column", marginLeft: 20, marginTop: 8}}>
@@ -443,10 +448,18 @@ class Artist extends React.Component {
                                         ))}
                                     </View>
                                 </View>
+                            <View style={{alignItems:"flex-end"}}>
+                                <Text style={{
+                                    color:'rgba(193, 193, 193, 1)', fontSize:16, marginLeft: 80,marginTop: 20, fontFamily:"Lucida Grande"}}>{this.millisToMinutesAndSeconds(song.duration_ms)}
+                                </Text>
+                            </View>
                             </View>
                         </View>
                     ))}
                 </View>
+                    <View style={styles.rightContainer}>
+
+                    </View>
                 </View>
             </View>
         );
@@ -490,6 +503,18 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         marginLeft: 75,
         marginTop: 60
+    },
+    rightContainer: {
+        width: d.width*0.249,
+        height: '60%',
+        backgroundColor: "rgba(15, 51,81, 1)",
+        alignItems: 'center',
+        borderBottomRightRadius: 60,
+        borderTopRightRadius: 60,
+        borderTopLeftRadius: 60,
+        borderBottomLeftRadius: 60,
+        marginTop: 20,
+        flex: -1
     },
     trackPic:{
         width: 60,
