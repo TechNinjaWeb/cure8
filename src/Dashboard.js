@@ -426,7 +426,6 @@ export default class DashBoard extends React.Component {
                                         inputStyle={{backgroundColor: 'white',fontSize:25,height:50,outline:'none', onKeyDown:this._handleKeyDown,fontFamily:"Monaco" }}
                                         containerStyle={{backgroundColor: 'white', borderRadius: 22, width:350, height:55, justifyContent:'center', padding: 0, marginTop: 25}}
                                         inputContainerStyle={{backgroundColor:'white'}}
-
                                         onChangeText={this.updateFriendSearch}
                                         lightTheme={true}
 

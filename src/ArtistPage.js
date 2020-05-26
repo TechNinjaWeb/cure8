@@ -50,7 +50,9 @@ const UpdateArtist = `
         Dates: $Dates,
         LastDateUpdated: $LastDateUpdated
      }) {
-        Name
+        Name,
+        Price,
+        Dates
      }
     }
     `;
@@ -71,7 +73,8 @@ class Artist extends React.Component {
             showPriceGraph: true,
             today: "",
             sign: "",
-            theDif: 0
+            theDif: 0,
+            tracksData: []
           }
 
     }
@@ -138,6 +141,19 @@ class Artist extends React.Component {
                     }
                 }
             )
+        var toptracksData =
+            await axios.get("https://api.spotify.com/v1/artists/" + this.props.ArtistID+"/top-tracks",
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': "Bearer " + this.props.bearer.data.access_token
+                    },
+                    params: {
+                        'market': "US"
+                    }
+                }
+            )
         // const artistDescription =
         //     await axios.get("https://api.genius.com/artists/16775",
         //         { headers: {'Content-Type': 'application/json',
@@ -172,6 +188,7 @@ class Artist extends React.Component {
         const params = {Name: response.data.name};
         const date = await API.graphql(graphqlOperation(ArtistLastDate, params));
         console.log(date.data.getArtist);
+        var curPrice = [response.data.popularity*100];
         if(date.data.getArtist == null){
             console.log("Check 3");
             const params = {Name: response.data.name,
@@ -183,6 +200,7 @@ class Artist extends React.Component {
                 LastDateUpdated: dateEST};
             this.setState({ showPriceGraph: false });
             console.log(await API.graphql(graphqlOperation(CreateArtist, params)));
+            this.setState({price: curPrice, dates: dateEST});
         }else {
             if (date.data.getArtist.LastDateUpdated != dateEST) {
                 const params2 = {
@@ -194,13 +212,14 @@ class Artist extends React.Component {
                     Dates: dateEST,
                     LastDateUpdated: dateEST
                 };
-                await API.graphql(graphqlOperation(UpdateArtist, params2));
+                const updated = await API.graphql(graphqlOperation(UpdateArtist, params2));
                 console.log("Check 1.5");
-                this.setState({price: date.data.getArtist.Price, dates: date.data.getArtist.Dates});
+                this.setState({price: updated.data.getArtist.Price, dates: updated.data.getArtist.Dates});
             } else {
                 console.log("Check 2");
                 if (date.data.getArtist.Dates.length == 1) {
                     this.setState({showPriceGraph: false});
+                    this.setState({price: date.data.getArtist.Price});
                 } else {
                     this.setState({price: date.data.getArtist.Price, dates: date.data.getArtist.Dates});
                 }
@@ -214,21 +233,7 @@ class Artist extends React.Component {
             {
                 name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
             },
-            {
-                name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
-            },
-            {
-                name: 'Page D', uv: 2780, pv: 3908, amt: 2000,
-            },
-            {
-                name: 'Page E', uv: 1890, pv: 4800, amt: 2181,
-            },
-            {
-                name: 'Page F', uv: 2390, pv: 3800, amt: 2500,
-            },
-            {
-                name: 'Page G', uv: 3490, pv: 4300, amt: 2100,
-            },*/
+          */
         console.log("-----");
         console.log(this.state.dates);
         console.log(this.state.price);
@@ -244,10 +249,6 @@ class Artist extends React.Component {
             sevenDays[k]=temp;
         }
         console.log(sevenDays);
-     //   for(var i = 0; i<this.state.dates.length; i++) {
-     //       var day = moment(this.state.dates[i]);
-     //       this.state.dates[i] = day.format("MM/DD")
-     //   }
         var exist = 0;
         var firstNonnullValueCheck = 0;
         if(this.state.price.length>7){
@@ -300,6 +301,16 @@ class Artist extends React.Component {
             }
             genres.push(response.data.genres[h]);
         }
+
+        var tracksTrimmed;
+        if(toptracksData.data.tracks.length>5){
+            tracksTrimmed = toptracksData.data.tracks.slice(0,5);
+        }else {
+            tracksTrimmed = toptracksData.data.tracks;
+        }
+
+        console.log(tracksTrimmed);
+
         console.log(response.data.genres);
         this.setState({theDif: Math.abs(this.state.price[len-1]-this.state.price[len-2])});
         this.setState({
@@ -309,18 +320,19 @@ class Artist extends React.Component {
             artistDescription: parseString,//.response.artist.description.dom.children
             imageLink:response.data.images[response.data.images.length-2].url,
             genres: genres,
-            graphData: data
+            graphData: data,
+            tracksData: tracksTrimmed
             });
         console.log("THIS IS IMAGE LINK "+this.state.imageLink)
-      /*  let homeArray = new Array(artistDescription.length);
-        let i = 0
-
-        for (var key in homeArray) {
-            homeArray[i] =  this.state.artistDescription[key];
-            i = i + 1;
-        }
-        this.state.artistDescription = homeArray
-        console.log(response.data)*/
+      /*  {this.state.tracksData.data.tracks.map((songName) => (
+                        <View style={{marginLeft: 15, backgroundColor: "rgba(227, 106,43, 1)", marginBottom: 10}}>
+                            <View style={{backgroundColor: "rgba(15, 51,81, 1)", width: '100%', height: '0.15%', marginTop: 15}}></View>
+                            <Text style={{
+                                color:'#fff', fontSize:16, fontFamily:"Lucida Grande", padding: 5}}>{songName.name}
+                            </Text>
+                        </View>
+                    ))}
+       */
         console.log(this.state.artistDescription);
     }
     renderColorfulLegendText(value, entry) {
@@ -330,7 +342,9 @@ class Artist extends React.Component {
     render() {
         return (
             <View style={styles.background}>
-                <View style={styles.rightContainer}>
+                <View style={{flexDirection: 'row',width: '100%',
+                    height: '100%',}}>
+                <View style={styles.leftContainer}>
                     <View style={{ marginTop: 70, flexDirection: 'column'}}>
                         <View style={{ marginLeft: 75,
                             marginRight: 75, alignItems: 'center',
@@ -406,6 +420,34 @@ class Artist extends React.Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <View style={styles.middleContainer}>
+                    <Text style={{
+                        color:'rgba(227, 106,43, 1)',fontWeight: "bold", fontSize:22, fontFamily:"Lucida Grande", marginTop: 5, textAlign: "left"
+                    }}>{this.state.name+ " Top Tracks on Spotify"}
+                    </Text>
+                    {this.state.tracksData.map((song) => (
+                        <View>
+                            <View style={{backgroundColor: "rgba(23, 51,79, 1)", width: '100%', height: '0.15%', marginTop: 15}}></View>
+                            <View style={{flexDirection:"row"}}>
+                                <Image source={{uri: song.album.images[1].url}} style={styles.trackPic}/>
+                                <View style={{flexDirection:"column"}}>
+                                    <Text style={{
+                                        color:'#fff', fontSize:16, fontFamily:"Lucida Grande", paddingBottom: 5}}>{song.name}
+                                    </Text>
+                                    <View style={{flexDirection:"row"}}>
+                                        {song.artists.map((artist, index) => (
+                                            <Text style={{
+                                                color:'#fff', fontSize:16, fontFamily:"Lucida Grande"}}>
+                                                <span  key={`demo_snap_${index}`}>{(index ? ', ' : '') + artist.name}</span>
+                                            </Text>
+                                        ))}
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    ))}
+                </View>
+                </View>
             </View>
         );
     }
@@ -423,7 +465,7 @@ const styles = StyleSheet.create({
         minWidth: 1000,
         minHeight: 1000
     },
-    rightContainer: {
+    leftContainer: {
         width: d.width*0.271,
         height: '100%',
         maxWidth: '100%',
@@ -440,6 +482,19 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         borderWidth: 3,
         borderColor: "rgba(13, 39,58, 1)"
+    },
+    middleContainer: {
+        width: d.width*0.480,
+        height: '100%',
+        maxWidth: '100%',
+        flexDirection: 'column',
+        marginLeft: 75,
+        marginTop: 60
+    },
+    trackPic:{
+        width: 50,
+        height: 50
     }
+
 })
 export default Artist;
