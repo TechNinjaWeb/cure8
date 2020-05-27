@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Image, Platform, StyleSheet, TouchableOpacity, View} from "react-native";
+import {Image, Platform, ScrollView, StyleSheet, TouchableOpacity, View} from "react-native";
 import {Button, Text} from "react-native-elements";
 //const id = "0TnOYISbd1XYRBk9myaseg";
 import XMLParser from 'react-xml-parser';
@@ -348,8 +348,8 @@ class Artist extends React.Component {
         return (
             <View style={styles.background}>
                 <View style={{flexDirection: 'row',width: '100%',
-                    height: '100%',}}>
-                <View style={styles.leftContainer}>
+                    height: '100%'}}>
+                   <View style={styles.leftContainer}>
                     <View style={{ marginTop: 70, flexDirection: 'column'}}>
                         <View style={{ marginLeft: 75,
                             marginRight: 75, alignItems: 'center',
@@ -425,7 +425,10 @@ class Artist extends React.Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.middleContainer}>
+                    <View style={{flexDirection: 'column',width: d.width*0.729,
+                        height: '100%'}}>
+                        <View style={styles.firstContainer}>
+                            <View style={styles.middleContainer}>
                     <Text style={{
                         color:'rgba(227, 106,43, 1)',fontWeight: "bold", fontSize:22, fontFamily:"Lucida Grande", marginTop: 5, textAlign: "left"
                     }}>{this.state.name+ " Top Tracks on Spotify"}
@@ -463,8 +466,12 @@ class Artist extends React.Component {
                         </View>
                     ))}
                 </View>
-                    <View style={styles.rightContainer}>
+                                <View style={styles.rightContainer}>
 
+                    </View>
+                        </View>
+                        <View style={styles.secondContainer}>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -502,17 +509,25 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: "rgba(13, 39,58, 1)"
     },
+    firstContainer: {
+        height: '60%',
+        maxWidth: '100%',
+        flexDirection: 'row',
+    },
+    secondContainer: {
+        height: '40%',
+        maxWidth: '100%',
+        flexDirection: 'row',
+    },
     middleContainer: {
-        width: d.width*0.480,
-        height: '100%',
+        width: '66%',
         maxWidth: '100%',
         flexDirection: 'column',
         marginLeft: 75,
         marginTop: 60
     },
     rightContainer: {
-        width: d.width*0.249,
-        height: '60%',
+        width: '34%',
         backgroundColor: "rgba(15, 51,81, 1)",
         alignItems: 'center',
         borderBottomRightRadius: 60,
