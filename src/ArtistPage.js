@@ -2,11 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import {Image, Platform, StyleSheet, TouchableOpacity, View} from "react-native";
 import {Button, Text} from "react-native-elements";
-//import Icon from "react-native-vector-icons/Icon";
 //const id = "0TnOYISbd1XYRBk9myaseg";
 import XMLParser from 'react-xml-parser';
 import {API, graphqlOperation} from "aws-amplify";
 import { Dimensions } from 'react-native';
+import Icon from "react-native-vector-icons/FontAwesome";
 const d = Dimensions.get("window");
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -219,7 +219,7 @@ class Artist extends React.Component {
                 };
                 const updated = await API.graphql(graphqlOperation(UpdateArtist, params2));
                 console.log("Check 1.5");
-                this.setState({price: updated.data.getArtist.Price, dates: updated.data.getArtist.Dates});
+                this.setState({price: updated.data.updateArtist.Price, dates: updated.data.updateArtist.Dates});
             } else {
                 console.log("Check 2");
                 if (date.data.getArtist.Dates.length == 1) {
@@ -435,24 +435,30 @@ class Artist extends React.Component {
                             <View style={{backgroundColor: "rgba(23, 51,79, 1)", width: '80%', height: '0.4%', marginTop: 15, marginBottom: 15}}></View>
                             <View style={{flexDirection:"row", marginLeft: 5}}>
                                 <Image source={{uri: song.album.images[1].url}} style={styles.trackPic}/>
-                                <View style={{flexDirection:"column", marginLeft: 20, marginTop: 8}}>
-                                    <Text style={{
-                                        color:'#fff', fontSize:16, fontWeight: "bold",fontFamily:"Lucida Grande", paddingBottom: 8}}>{song.name}
-                                    </Text>
-                                    <View style={{flexDirection:"row"}}>
-                                        {song.artists.map((artist, index) => (
-                                            <Text style={{
-                                                color:'rgba(193, 193, 193, 1)', fontSize:16, fontFamily:"Lucida Grande"}}>
-                                                <span  key={`demo_snap_${index}`}>{(index ? ', ' : '') + artist.name}</span>
-                                            </Text>
-                                        ))}
+                                    <View style={{flexDirection:"column", marginLeft: 20, marginTop: 8, width: "59%"}}>
+                                        <Text style={{
+                                            color:'#fff', fontSize:16, fontWeight: "bold",fontFamily:"Lucida Grande", paddingBottom: 8}}>{song.name}
+                                        </Text>
+                                        <View style={{flexDirection:"row"}}>
+                                            {song.artists.map((artist, index) => (
+                                                <Text style={{
+                                                    color:'rgba(193, 193, 193, 1)', fontSize:16, fontFamily:"Lucida Grande"}}>
+                                                    <span  key={`demo_snap_${index}`}>{(index ? ', ' : '') + artist.name}</span>
+                                                </Text>
+                                            ))}
+                                        </View>
                                     </View>
-                                </View>
-                            <View style={{alignItems:"flex-end"}}>
-                                <Text style={{
-                                    color:'rgba(193, 193, 193, 1)', fontSize:16, marginLeft: 80,marginTop: 20, fontFamily:"Lucida Grande"}}>{this.millisToMinutesAndSeconds(song.duration_ms)}
-                                </Text>
-                            </View>
+                                    <Text style={{
+                                        color:'#fff',opacity:0.6, fontSize:16, fontFamily:"Lucida Grande", marginTop: 20}}>{this.millisToMinutesAndSeconds(song.duration_ms)}
+                                    </Text>
+                                    <Button  icon={<Icon name="external-link" color="rgba(23, 51,79, 1)" size={20} />} buttonStyle={{
+                                        alignSelf: 'flex-end',
+                                        width: 20,
+                                        height: 20,
+                                        backgroundColor: "none",
+                                        marginLeft: 30,
+                                        marginTop: 20
+                                    }}/>
                             </View>
                         </View>
                     ))}
