@@ -9,7 +9,7 @@ import { Dimensions } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
 const d = Dimensions.get("window");
 import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import {LinearGradient} from "expo-linear-gradient";
 const ArtistLastDate = `
@@ -17,7 +17,8 @@ const ArtistLastDate = `
        getArtist(Name: $Name) {
          LastDateUpdated,
          Price,
-         Dates
+         Dates,
+         Popularity
          
   }
 }
@@ -52,7 +53,8 @@ const UpdateArtist = `
      }) {
         Name,
         Price,
-        Dates
+        Dates,
+        Popularity
      }
     }
     `;
@@ -74,7 +76,9 @@ class Artist extends React.Component {
             today: "",
             sign: "",
             theDif: 0,
-            tracksData: []
+            tracksData: [],
+            popularityArray: [],
+            popGraphData: []
           }
 
     }
@@ -205,7 +209,7 @@ class Artist extends React.Component {
                 LastDateUpdated: dateEST};
             this.setState({ showPriceGraph: false });
             console.log(await API.graphql(graphqlOperation(CreateArtist, params)));
-            this.setState({price: curPrice, dates: dateEST});
+            this.setState({price: curPrice, dates: dateEST, popularityArray: response.data.popularity});
         }else {
             if (date.data.getArtist.LastDateUpdated != dateEST) {
                 const params2 = {
@@ -219,19 +223,20 @@ class Artist extends React.Component {
                 };
                 const updated = await API.graphql(graphqlOperation(UpdateArtist, params2));
                 console.log("Check 1.5");
-                this.setState({price: updated.data.updateArtist.Price, dates: updated.data.updateArtist.Dates});
+                this.setState({price: updated.data.updateArtist.Price, dates: updated.data.updateArtist.Dates, popularityArray: updated.data.updateArtist.Popularity});
             } else {
                 console.log("Check 2");
                 if (date.data.getArtist.Dates.length == 1) {
                     this.setState({showPriceGraph: false});
                     this.setState({price: date.data.getArtist.Price});
                 } else {
-                    this.setState({price: date.data.getArtist.Price, dates: date.data.getArtist.Dates});
+                    this.setState({price: date.data.getArtist.Price, dates: date.data.getArtist.Dates, popularityArray: date.data.getArtist.Popularity});
                 }
             }
         }
 
         const data = [];
+        const dataForPopularityGraph = [];
          /*   {
                 name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
             },
@@ -254,6 +259,7 @@ class Artist extends React.Component {
             sevenDays[k]=temp;
         }
         console.log(sevenDays);
+        console.log(this.state.popularityArray);
         var exist = 0;
         var firstNonnullValueCheck = 0;
         if(this.state.price.length>7){
@@ -264,6 +270,7 @@ class Artist extends React.Component {
                     if(sevenDays[j]===this.state.dates[i]){
                         var day = moment(this.state.dates[i]);
                         data.push({name: day.format("MM/DD"), price: this.state.price[i]});
+                        dataForPopularityGraph.push({name: day.format("MM/DD"), popularity: this.state.popularityArray[i]});
                         exist =1;
                         firstNonnullValueCheck = 1;
                     }
@@ -271,6 +278,7 @@ class Artist extends React.Component {
                 if(exist === 0 && firstNonnullValueCheck=== 1){
                     var day = moment(sevenDays[j]);
                     data.push({name: day.format("MM/DD")});
+                    dataForPopularityGraph.push({name: day.format("MM/DD")});
                 }
 
             }
@@ -281,6 +289,7 @@ class Artist extends React.Component {
                     if(sevenDays[j]===this.state.dates[i]){
                         var day = moment(this.state.dates[i]);
                         data.push({name: day.format("MM/DD"), price: this.state.price[i]});
+                        dataForPopularityGraph.push({name: day.format("MM/DD"), popularity: this.state.popularityArray[i]});
                         exist =1;
                         firstNonnullValueCheck = 1;
                     }
@@ -288,6 +297,7 @@ class Artist extends React.Component {
                 if(exist === 0 && firstNonnullValueCheck=== 1){
                     var day = moment(sevenDays[j]);
                     data.push({name: day.format("MM/DD")});
+                    dataForPopularityGraph.push({name: day.format("MM/DD")});
                 }
             }
         }
@@ -326,7 +336,8 @@ class Artist extends React.Component {
             imageLink:response.data.images[response.data.images.length-2].url,
             genres: genres,
             graphData: data,
-            tracksData: tracksTrimmed
+            tracksData: tracksTrimmed,
+            popGraphData: dataForPopularityGraph
             });
         console.log("THIS IS IMAGE LINK "+this.state.imageLink)
       /*  {this.state.tracksData.data.tracks.map((songName) => (
@@ -348,7 +359,7 @@ class Artist extends React.Component {
         return (
             <View style={styles.background}>
                 <View style={{flexDirection: 'row',width: '100%',
-                    height: '100%'}}>
+                    height: '100%', position: "relative", flex: 1}}>
                    <View style={styles.leftContainer}>
                     <View style={{ marginTop: 70, flexDirection: 'column'}}>
                         <View style={{ marginLeft: 75,
@@ -424,9 +435,9 @@ class Artist extends React.Component {
 
                         </TouchableOpacity>
                     </View>
-                </View>
-                    <View style={{flexDirection: 'column',width: d.width*0.729,
-                        height: '100%'}}>
+                    </View>
+                    <ScrollView style={{flexDirection: 'column',maxWidth: d.width*0.729,
+                        height: '100%',  left: d.width*0.271}}>
                         <View style={styles.firstContainer}>
                             <View style={styles.middleContainer}>
                     <Text style={{
@@ -471,8 +482,27 @@ class Artist extends React.Component {
                     </View>
                         </View>
                         <View style={styles.secondContainer}>
+                            {this.state.showPriceGraph === true &&(
+                                    <ResponsiveContainer width='30%' aspect={4.0/3.0}>
+                                    <LineChart
+                                        data={this.state.popGraphData}
+                                        margin={{
+                                            top: 10, right: 30, left: 30, bottom: 5,
+                                        }}
+                                    >
+                                        <CartesianGrid strokeDasharray="3 3" stroke="white"/>
+                                        <XAxis dataKey="name" stroke="white"/>
+                                        <YAxis stroke="white"/>
+                                        <Tooltip />
+                                        <Legend payload={[
+                                            { value: 'Popularity of '+ this.state.name, type: 'line', color: 'rgba(227, 106,43, 1' }
+                                        ]} formatter={this.renderColorfulLegendText}/>
+                                        <Line connectNulls type="monotone" dataKey="popularity" stroke="rgba(227, 106,43, 1)" fill="rgba(227, 106,43, 1)" activeDot={{ r: 8 }} />
+                                    </LineChart>
+                                    </ResponsiveContainer>
+                            )}
                         </View>
-                    </View>
+                    </ScrollView>
                 </View>
             </View>
         );
@@ -493,13 +523,14 @@ const styles = StyleSheet.create({
     },
     leftContainer: {
         width: d.width*0.271,
-        height: '100%',
+        height: "100%",
         maxWidth: '100%',
         backgroundColor: "rgba(15, 51,81, 1)",
         alignItems: 'center',
         justifyContent: 'flex-start',
         borderBottomRightRadius: 60,
-        borderTopRightRadius: 60
+        borderTopRightRadius: 60,
+        position: "fixed"
     },
     artistPic: {
         width: 150,
@@ -518,6 +549,7 @@ const styles = StyleSheet.create({
         height: '40%',
         maxWidth: '100%',
         flexDirection: 'row',
+        marginTop: 60
     },
     middleContainer: {
         width: '66%',
@@ -527,6 +559,7 @@ const styles = StyleSheet.create({
         marginTop: 60
     },
     rightContainer: {
+        height: d.width*0.271,
         width: '34%',
         backgroundColor: "rgba(15, 51,81, 1)",
         alignItems: 'center',
