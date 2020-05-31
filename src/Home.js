@@ -73,7 +73,6 @@ export default class Home extends React.Component {
 
 
         event.preventDefault();
-
         try {
             await Auth.signIn(this.state.username, this.state.password);
             this.props.userHasAuthenticated(true)
@@ -121,9 +120,9 @@ export default class Home extends React.Component {
             this.props.history.push("/dashboard"); //!!!
 
             this.setState({ isLoading: false });
-
-
         }
+
+
     }
     forgotPassword = async event =>{
         const { username, password } = this.state;

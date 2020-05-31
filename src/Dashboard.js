@@ -19,6 +19,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import axios from 'axios';
 import { API, graphqlOperation } from 'aws-amplify';
 import Modal from 'modal-enhanced-react-native-web';
+import { v4 as uuidv4 } from 'uuid';
 //import Modal from 'react-native-modal';  For iOS and Android verions
 //import { BlurView } from "@react-native-community/blur";
 //import { BlurView } from 'expo-blur';
@@ -91,6 +92,17 @@ const RejectFriend = `
         index: $index
       }) {
         friendRequests
+     }
+    }
+    `;
+const CreateLeague = `
+    mutation ($leagueID: ID!, $ownerID: ID!){
+
+     createLeague(input: {
+        leagueID: $leagueID,
+        ownerID: $ownerID
+      }) {
+        leagueID
      }
     }
     `;
@@ -256,9 +268,11 @@ export default class DashBoard extends React.Component {
 
     };
 
-    createLeague = search => {
-        console.log("Deal with creation of league...")
-    };
+    createLeague = async () => {
+        const params = { leagueID: uuidv4(), ownerID: this.props.id};
+        const books = await API.graphql(graphqlOperation(CreateLeague,params));
+        console.log('books: ', books);
+    }
 
 
     _handleKeyDown = (e) => {

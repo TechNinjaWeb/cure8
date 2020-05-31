@@ -9,6 +9,7 @@
     "@aws-amplify/cli": "^4.20.0",
     "@aws-amplify/predictions": "^3.1.10",
     "@react-native-community/blur": "^3.5.0",
+    "@u-wave/react-vimeo": "^0.8.3",
     "aws-amplify": "^1.1.28",
     "axios": "^0.19.2",
     "expo": "^34.0.1",
@@ -28,7 +29,8 @@
     "react-router-native": "^5.0.1",
     "react-scripts": "^3.1.1",
     "react-xml-parser": "^1.1.6",
-    "recharts": "^1.8.5"
+    "recharts": "^1.8.5",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "babel-preset-expo": "^6.0.0",
