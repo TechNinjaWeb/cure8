@@ -266,7 +266,6 @@ class Artist extends React.Component {
             for (var j = 0; j < sevenDays.length; j++) {
                 exist = 0;
                 for (var i = this.state.price.length-7; i < this.state.price.length; i++) {
-
                     if(sevenDays[j]===this.state.dates[i]){
                         var day = moment(this.state.dates[i]);
                         data.push({name: day.format("MM/DD"), price: this.state.price[i]});
@@ -280,7 +279,6 @@ class Artist extends React.Component {
                     data.push({name: day.format("MM/DD")});
                     dataForPopularityGraph.push({name: day.format("MM/DD")});
                 }
-
             }
         }else {
             for (var j = 0; j < sevenDays.length; j++) {
