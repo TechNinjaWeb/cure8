@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Router, Switch, Route } from './routing';
+import React, {Fragment} from 'react';
+import {Platform, StyleSheet, View} from 'react-native';
+import { Router, Switch, Route, Link } from './routing';
 import Home from './Home';
 import Pokemon from './Pokemon';
 import Dashboard from "./Dashboard";
@@ -13,6 +13,7 @@ import Amplify from '@aws-amplify/core'
 import config from './config'
 import Friends from "./Friends";
 import Artist from "./ArtistPage"
+import { Nav, Navbar, NavItem } from "react-bootstrap";
 Amplify.configure({ Auth: {
     mandatorySignIn: true,
     region: config.cognito.REGION,
@@ -69,8 +70,33 @@ export default class App extends React.Component {
       );
     } else {
       return (
-
             <Router>
+                {(Platform.OS === 'web')&&(
+                <Navbar fluid collapseOnSelect>
+                    <Navbar.Brand>
+                        <Link to="/">cure8</Link>
+                    </Navbar.Brand>
+                    <Navbar.Toggle/>
+                    <Navbar.Collapse>
+                        <Nav pullRight>
+                            {this.state.isAuthenticated
+                                ? <Navbar>
+                                    <NavItem onClick={this.handleLogout}>Logout</NavItem>
+                                    <Link to="/addFriend">My profile</Link>
+                                    <Link to="/ArtistProfile">My Artist</Link>
+
+
+                                </Navbar>
+                                : <Fragment>
+                                    <Link to="/signup">Signup</Link>
+                                    <Link to="/login">Login</Link>
+
+                                </Fragment>
+                            }
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+            )}
               <Switch>
                 <Route
                     exact
@@ -140,7 +166,6 @@ export default class App extends React.Component {
 
               </Switch>
             </Router>
-
       );
     }
   }
@@ -150,7 +175,7 @@ export default class App extends React.Component {
       Asset.loadAsync([
 
         require('../assets/edSheeran.png'),  //makes page load only after loading the image
-        require('../assets/DashboardBackground .png')
+        require('../assets/DashboardBackground.png')
       ]),
       await Font.loadAsync({
         // This is the font that we are using for our tab bar

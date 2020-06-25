@@ -5,7 +5,7 @@
     "slug": "cure8hybrid",
     "privacy": "public",
     "sdkVersion": "34.0.0",
-    "platforms": ["web"],
+    "platforms": ["ios"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

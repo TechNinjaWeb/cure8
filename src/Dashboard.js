@@ -369,7 +369,7 @@ export default class DashBoard extends React.Component {
                     </View>
                 )}
                 {Platform.OS == 'web' && !ios &&(
-                    <ImageBackground source={require('../assets/DashboardBackground .png')}
+                    <ImageBackground source={require('../assets/DashboardBackground.png')}
                                      style={styles.backgroundImage} >
                         <SearchBar
                             platform="default"
