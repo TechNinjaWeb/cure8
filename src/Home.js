@@ -116,9 +116,6 @@ export default class Home extends React.Component {
             this.props.history.push("/dashboard");
         } catch (e) {
             alert(e.message);
-            this.props.userHasAuthenticated(true) //!!
-            this.props.history.push("/dashboard"); //!!!
-
             this.setState({ isLoading: false });
         }
 

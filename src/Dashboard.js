@@ -278,7 +278,7 @@ export default class DashBoard extends React.Component {
     _handleKeyDown = (e) => {
         if (e.key === 'Enter') {
             alert("validate")
-            comsole.log("ENter pressed????")
+            console.log("ENter pressed????")
         }
     }
     handleLogout = async event => {
