@@ -20,6 +20,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Modal from "modal-enhanced-react-native-web";
 import axios from 'axios';
 import { API, graphqlOperation } from 'aws-amplify';
+import {Dimensions} from 'react-native';
+const SCREEN_WIDTH = Dimensions.get("window").width;
 Amplify.configure({ Auth: {
     mandatorySignIn: true,
     region: config.cognito.REGION,
@@ -30,7 +32,8 @@ Amplify.configure({ Auth: {
 const ListUsers = `
      query GetUsers($id: ID!) {
        getUsers(id: $id) {
-         friends
+         friends,
+         friendRequests
   }
 }
     `;
@@ -201,26 +204,25 @@ export default class App extends React.Component {
     };
     showFriends = async event => {
         try {
-            alert("in show friends");
             const params = {id: this.state.id};
             const books = await API.graphql(graphqlOperation(ListUsers, params));
-            console.log('books: ', books);
-            console.log('after test');
-            this.setState({friendList: Array.from(books.data.getUsers.friends)});
-            console.log(this.state.friendList);
+            //   console.log('books: ', books);
+            //  console.log('after test');
+            this.setState({friendList: Array.from(books.data.getUsers.friends), friendRequestsList: Array.from(books.data.getUsers.friendRequests)});
+            //   console.log(this.state.friendList);
         }catch (err) {
             this.state.hasFriendsAfterSignUp = false;
         }
-        try {
+      /*  try {
             const params = {id: this.state.id};
             const books2 = await API.graphql(graphqlOperation(getUsersFriendRequests, params));
-            console.log('requests: ', books2);
+            //  console.log('requests: ', books2);
             this.setState({friendRequestsList: Array.from(books2.data.getUsers.friendRequests)});
-            console.log(this.state.friendRequestsList);
+            //  console.log(this.state.friendRequestsList);
         }catch (err) {
             alert("error in friend request");
             this.state.hasRequestsAfterSignUp = false;
-        }
+        }*/
         this.setState({isFriendsModalVisible: !this.state.isFriendsModalVisible});
     }
 
@@ -304,10 +306,10 @@ export default class App extends React.Component {
       return (
             <Router>
                 {(Platform.OS === 'web')&&(
-                <Navbar style={{backgroundColor: "rgb(60,130,200)"}} fluid>
-                    <View style={{flexDirection: 'row'}}>
-                    <Navbar.Brand style={{ display: "flex", alignItems: "center"}}>
-                        <Icon.Button onPress={this.showFriends.bind(this)}  name="navicon"  size={40} shadowRadius={10} solid/>
+                <Navbar style={{backgroundColor: "rgb(60,130,200)", height:"8.12%"}} fluid>
+                    <View style={{flexDirection: 'row', padding: 0.0119*SCREEN_WIDTH}}>
+                    <Navbar.Brand style={{ display: "flex", alignItems: "center", backgroundColor: "rgb(60,130,200)"}}>
+                        <Icon.Button style={{backgroundColor: "rgb(60,130,200)"}} backgroundColor={"rgb(60,130,200)"} onPress={this.showFriends.bind(this)} underlayColor={"green"} name="navicon" size={30} shadowRadius={10} solid/>
                         <Link to="/">cure8</Link>
                     </Navbar.Brand>
                     <Nav pullRight>
