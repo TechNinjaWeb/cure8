@@ -324,17 +324,15 @@ export default class App extends React.Component {
                         <NavItem onClick={this.showFriends.bind(this)}><img style={{height:0.071*SCREEN_HEIGHT}} src={require('../assets/hypemusicLogo2x.png')}/></NavItem>
                         </Link>
                     </Navbar.Brand>
-                    <Nav pullRight style={{ alignItems: 'center',
-                        justifyContent: 'space-between',}}>
+                        {this.state.isAuthenticated === true &&(
+                        <Form inline>
+                            <FormControl type="text" placeholder="Search"/>
+                            <Button variant="outline-primary">Search</Button>
+                        </Form>
+                        )}
                         {this.state.isAuthenticated
                             ? <Navbar>
-                                <View  style={{flexDirection: 'row',  justifyContent:'space-between'}}>
-                                <Form inline>
-                                    <FormControl type="text" placeholder="Search"/>
-                                    <Button variant="outline-primary">Search</Button>
-                                </Form>
                                     <Link onClick={this.handleLogout} to="/">Log out</Link>
-                                </View>
                                 </Navbar>
                                 : <Fragment>
                                 <View  style={{flexDirection: 'row',  justifyContent:'space-between'}}>
@@ -352,7 +350,6 @@ export default class App extends React.Component {
                                 </View>
                                 </Fragment>
                             }
-                    </Nav>
                     </View>
                 </Navbar>
 
