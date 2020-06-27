@@ -13,7 +13,7 @@ import Amplify from '@aws-amplify/core'
 import config from './config'
 import Friends from "./Friends";
 import Artist from "./ArtistPage"
-import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { Nav, Navbar, NavItem, Form, FormControl } from "react-bootstrap";
 import { Auth } from "aws-amplify";
 import {Button, SearchBar, Text} from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -22,6 +22,7 @@ import axios from 'axios';
 import { API, graphqlOperation } from 'aws-amplify';
 import {Dimensions} from 'react-native';
 const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 Amplify.configure({ Auth: {
     mandatorySignIn: true,
     region: config.cognito.REGION,
@@ -257,7 +258,8 @@ export default class App extends React.Component {
   }
     showSideBar = show => {
         this.setState({ isFriendsModalVisible: show });
-    }
+    };
+
 
   returnUserId(){
      return this.state.id
@@ -302,28 +304,52 @@ export default class App extends React.Component {
             var userAgent = window.navigator.userAgent.toLowerCase(),
                 safari = /safari/.test(userAgent),
                 ios = /iphone|ipod|ipad/.test(userAgent);
-        }
+        }//position: "fixed",top:0, left:0, right:0, overflow:"visible"
       return (
             <Router>
                 {(Platform.OS === 'web')&&(
-                <Navbar style={{backgroundColor: "rgb(60,130,200)", height:"8.12%"}} fluid>
-                    <View style={{flexDirection: 'row', padding: 0.0119*SCREEN_WIDTH}}>
-                    <Navbar.Brand style={{ display: "flex", alignItems: "center", backgroundColor: "rgb(60,130,200)"}}>
-                        <Icon.Button style={{backgroundColor: "rgb(60,130,200)"}} backgroundColor={"rgb(60,130,200)"} onPress={this.showFriends.bind(this)} underlayColor={"green"} name="navicon" size={30} shadowRadius={10} solid/>
-                        <Link to="/">cure8</Link>
+                <Navbar style={{}}>
+                    <View style={{flexDirection: 'row', padding: 0.0119*SCREEN_WIDTH,shadowColor: "rgb(240,240,240)",
+                        shadowOpacity: 0.8,
+                        shadowRadius: 10,
+                        shadowOffset: {
+                            height: 2,
+                            width: 1
+                        },overflow:"visible", zIndex: 1, justifyContent:'space-between'}}>
+                    <Navbar.Brand style={{ display: "flex", alignItems: "center"}}>
+                        {(this.state.isAuthenticated)&&(
+                        <Icon.Button iconStyle={{color:"rgb(153,46,230)"}} style={{backgroundColor: "rgb(255,255,255)", color: "rgb(0,0,50)"}} backgroundColor={"rgb(255,255,255)"} onPress={this.showFriends.bind(this)} name="navicon" size={30} shadowRadius={10} solid/>
+                        )}
+                        <Link to="/">
+                        <NavItem onClick={this.showFriends.bind(this)}><img style={{height:0.071*SCREEN_HEIGHT}} src={require('../assets/hypemusicLogo2x.png')}/></NavItem>
+                        </Link>
                     </Navbar.Brand>
-                    <Nav pullRight>
+                    <Nav pullRight style={{ alignItems: 'center',
+                        justifyContent: 'space-between',}}>
                         {this.state.isAuthenticated
                             ? <Navbar>
-                                    <NavItem onClick={this.showFriends.bind(this)}>Sidebar</NavItem>
+                                <View  style={{flexDirection: 'row',  justifyContent:'space-between'}}>
+                                <Form inline>
+                                    <FormControl type="text" placeholder="Search"/>
+                                    <Button variant="outline-primary">Search</Button>
+                                </Form>
                                     <Link onClick={this.handleLogout} to="/">Log out</Link>
-                                    <Link to="/addFriend">My profile</Link>
-                                    <Link to="/ArtistProfile">My Artist</Link>
+                                </View>
                                 </Navbar>
                                 : <Fragment>
-                                    <Link to="/SignUp">Signup</Link>
-                                    <Link to="/">Login</Link>
+                                <View  style={{flexDirection: 'row',  justifyContent:'space-between'}}>
+                                    <Link to="/" style={{textDecoration: 'none', marginRight: 20}}><Button buttonStyle={{backgroundColor: "none"}}
+                                                         title={<View>
+                                                             <Text style={{fontSize:20,color:"black", fontFamily:"Monaco"}}>Login</Text>
+                                                         </View>}>
+                                    </Button></Link>
 
+                                    <Link to="/SignUp" style={{textDecoration: 'none'}}><Button buttonStyle={{backgroundColor: "rgb(153,46,230)"}}
+                                                                                      title={<View>
+                                                                                          <Text style={{fontSize:20, fontFamily:"Monaco"}}>SignUp</Text>
+                                                                                      </View>}>
+                                    </Button></Link>
+                                </View>
                                 </Fragment>
                             }
                     </Nav>

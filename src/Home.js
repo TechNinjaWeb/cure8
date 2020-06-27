@@ -177,7 +177,7 @@ export default class Home extends React.Component {
                         </View>
                     )}
                     {Platform.OS == 'web' && !ios &&(
-                        <ImageBackground source={require('../assets/edSheeran.png')} style={styles.backgroundImage} >
+                        <ImageBackground source={require('../assets/DashboardBackground.png')} style={styles.backgroundImage} >
                 <View style={styles.container}>
                     <Text style={styles.label}>Sign In</Text>
                     <Input
