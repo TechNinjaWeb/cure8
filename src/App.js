@@ -21,6 +21,15 @@ import Modal from "modal-enhanced-react-native-web";
 import axios from 'axios';
 import { API, graphqlOperation } from 'aws-amplify';
 import {Dimensions} from 'react-native';
+import { DropdownMenu, MenuItem } from 'react-bootstrap-dropdown-menu';
+//import NavbarDropdown from "react-navbar-dropdown";
+import Dropdown from "./Dropdown";
+import './DropdownOrange.css';
+import createDOMPurify from 'dompurify'
+import { JSDOM } from 'jsdom'
+import './test.scss';
+const window = (new JSDOM('')).window;
+const DOMPurify = createDOMPurify(window);
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 Amplify.configure({ Auth: {
@@ -30,6 +39,24 @@ Amplify.configure({ Auth: {
 
   }
 });
+const rawHTML = `
+<div class="container">
+  <div class="half">
+    <label for="profile2" class="profile-dropdown">
+      <input type="checkbox" id="profile2">
+      <img src="https://cdn0.iconfinder.com/data/icons/avatars-3/512/avatar_hipster_guy-512.png">
+      <span>John Doe</span>
+      <label for="profile2"><i class="mdi mdi-menu"></i></label>
+      <ul>
+        <li><a href="#"><i class="mdi mdi-email-outline"></i>Messages</a></li>
+        <li><a href="#"><i class="mdi mdi-account"></i>Account</a></li>
+        <li><a href="#"><i class="mdi mdi-settings"></i>Settings</a></li>
+        <li><a href="#"><i class="mdi mdi-logout"></i>Logout</a></li>
+      </ul>
+    </label>
+  </div>
+</div>
+`
 const ListUsers = `
      query GetUsers($id: ID!) {
        getUsers(id: $id) {
@@ -125,9 +152,30 @@ export default class App extends React.Component {
             friend2: '',
             friendRequestsList: [],
             hasFriendsAfterSignUp: 1,
-            hasRequestsAfterSignUp: 1
+            hasRequestsAfterSignUp: 1,
+            showMenu: false
         };
+        this.showMenu = this.showMenu.bind(this);
+        this.closeMenu = this.closeMenu.bind(this);
 
+    }
+    showMenu(event) {
+        event.preventDefault();
+
+        this.setState({ showMenu: true }, () => {
+            document.addEventListener('click', this.closeMenu);
+        });
+    }
+
+    closeMenu(event) {
+
+        if (!this.dropdownMenu.contains(event.target)) {
+
+            this.setState({ showMenu: false }, () => {
+                document.removeEventListener('click', this.closeMenu);
+            });
+
+        }
     }
     updateFriendSearch = friend => {
         this.setState({ friend });
@@ -332,7 +380,7 @@ export default class App extends React.Component {
                         )}
                         {this.state.isAuthenticated
                             ? <Navbar>
-                                    <Link onClick={this.handleLogout} to="/">Log out</Link>
+                                <Dropdown title="Dropdown Menu" options={['Apple', 'Orange', 'Pear', 'Mango']}/>
                                 </Navbar>
                                 : <Fragment>
                                 <View  style={{flexDirection: 'row',  justifyContent:'space-between'}}>
