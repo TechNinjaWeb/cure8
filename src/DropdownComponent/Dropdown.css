@@ -28,11 +28,13 @@
     margin: 0;
     padding: 0;
     position: absolute;
+    width: 100%;
 }
 .dropdown__list--active {
     max-height: 1000px;
     opacity: 1;
     position: absolute;
+    width: 100%;
 }
 .dropdown__list-item {
     border-bottom: 1px solid #eee;

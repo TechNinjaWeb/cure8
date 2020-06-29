@@ -21,15 +21,7 @@ import Modal from "modal-enhanced-react-native-web";
 import axios from 'axios';
 import { API, graphqlOperation } from 'aws-amplify';
 import {Dimensions} from 'react-native';
-import { DropdownMenu, MenuItem } from 'react-bootstrap-dropdown-menu';
-//import NavbarDropdown from "react-navbar-dropdown";
-import Dropdown from "./Dropdown";
-import './DropdownOrange.css';
-import createDOMPurify from 'dompurify'
-import { JSDOM } from 'jsdom'
-import './test.scss';
-const window = (new JSDOM('')).window;
-const DOMPurify = createDOMPurify(window);
+import Dropdown from "./DropdownComponent/Dropdown";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 Amplify.configure({ Auth: {
@@ -39,24 +31,7 @@ Amplify.configure({ Auth: {
 
   }
 });
-const rawHTML = `
-<div class="container">
-  <div class="half">
-    <label for="profile2" class="profile-dropdown">
-      <input type="checkbox" id="profile2">
-      <img src="https://cdn0.iconfinder.com/data/icons/avatars-3/512/avatar_hipster_guy-512.png">
-      <span>John Doe</span>
-      <label for="profile2"><i class="mdi mdi-menu"></i></label>
-      <ul>
-        <li><a href="#"><i class="mdi mdi-email-outline"></i>Messages</a></li>
-        <li><a href="#"><i class="mdi mdi-account"></i>Account</a></li>
-        <li><a href="#"><i class="mdi mdi-settings"></i>Settings</a></li>
-        <li><a href="#"><i class="mdi mdi-logout"></i>Logout</a></li>
-      </ul>
-    </label>
-  </div>
-</div>
-`
+
 const ListUsers = `
      query GetUsers($id: ID!) {
        getUsers(id: $id) {
@@ -373,14 +348,34 @@ export default class App extends React.Component {
                         </Link>
                     </Navbar.Brand>
                         {this.state.isAuthenticated === true &&(
-                        <Form inline>
-                            <FormControl type="text" placeholder="Search"/>
-                            <Button variant="outline-primary">Search</Button>
-                        </Form>
+                            <SearchBar
+                                platform="default"
+                                round
+                                placeholder="Add friends"
+                                placeholderTextColor={'#g5g5g5'}
+                                inputStyle={{backgroundColor: 'white',fontSize:25,height:50,outline:'none', onKeyDown:this._handleKeyDown,fontFamily:"Monaco" }}
+                                containerStyle={{backgroundColor: 'white', borderRadius: 22, width:350, height:55, justifyContent:'center', padding: 0, marginTop: 25}}
+                                inputContainerStyle={{backgroundColor:'white'}}
+                                onChangeText={this.updateFriendSearch}
+                                lightTheme={true}
+                                removeClippedSubviews={true}
+                                clearIcon={false}
+                                borderBottomColor={'transparent'}
+                                borderTopColor={'transparent'}
+                                searchIcon={<Button
+                                    onClick={this.handleFriendSearch}
+                                    icon={<Icon name="search" color="#3A85D6" size={40} shadowRadius={10}/>}
+                                    buttonStyle={{
+                                        backgroundColor: "rgba(255, 255,255, 0.5)",
+                                    }}
+                                />}
+                                value={friend}
+
+                            />
                         )}
                         {this.state.isAuthenticated
                             ? <Navbar>
-                                <Dropdown title="Dropdown Menu" options={['Apple', 'Orange', 'Pear', 'Mango']}/>
+                                <Dropdown title={"Hi, "+this.state.email} options={['Settings', 'Logout']}/>
                                 </Navbar>
                                 : <Fragment>
                                 <View  style={{flexDirection: 'row',  justifyContent:'space-between'}}>
