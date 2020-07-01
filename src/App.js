@@ -331,7 +331,7 @@ export default class App extends React.Component {
       return (
             <Router>
                 {(Platform.OS === 'web')&&(
-                <Navbar style={{}}>
+                <Navbar sticky="top" style={{}}>
                     <View style={{flexDirection: 'row', padding: 0.0119*SCREEN_WIDTH,shadowColor: "rgb(240,240,240)",
                         shadowOpacity: 0.8,
                         shadowRadius: 10,
@@ -344,18 +344,18 @@ export default class App extends React.Component {
                         <Icon.Button iconStyle={{color:"rgb(153,46,230)"}} style={{backgroundColor: "rgb(255,255,255)", color: "rgb(0,0,50)"}} backgroundColor={"rgb(255,255,255)"} onPress={this.showFriends.bind(this)} name="navicon" size={30} shadowRadius={10} solid/>
                         )}
                         <Link to="/">
-                        <NavItem onClick={this.showFriends.bind(this)}><img style={{height:0.071*SCREEN_HEIGHT}} src={require('../assets/hypemusicLogo2x.png')}/></NavItem>
+                        <img style={{height:0.071*SCREEN_HEIGHT}} src={require('../assets/hypemusicLogo2x.png')}/>
                         </Link>
                     </Navbar.Brand>
                         {this.state.isAuthenticated === true &&(
                             <SearchBar
                                 platform="default"
                                 round
-                                placeholder="Add friends"
+                                placeholder="Search for games"
                                 placeholderTextColor={'#g5g5g5'}
-                                inputStyle={{backgroundColor: 'white',fontSize:25,height:50,outline:'none', onKeyDown:this._handleKeyDown,fontFamily:"Monaco" }}
-                                containerStyle={{backgroundColor: 'white', borderRadius: 22, width:350, height:55, justifyContent:'center', padding: 0, marginTop: 25}}
-                                inputContainerStyle={{backgroundColor:'white'}}
+                                inputStyle={{backgroundColor: 'rgba(237, 234,252, 1)',fontSize:20, height:"33%", outline:'none', onKeyDown:this._handleKeyDown,fontFamily:"Monaco" }}
+                                containerStyle={{backgroundColor: "rgba(237, 234,252, 1)", borderRadius: 22, width:SCREEN_WIDTH/4, minWidth:350,height:"33%", justifyContent:'center', padding: 0, alignSelf: "center"}}
+                                inputContainerStyle={{backgroundColor:"rgba(237, 234,252, 1)"}}
                                 onChangeText={this.updateFriendSearch}
                                 lightTheme={true}
                                 removeClippedSubviews={true}
@@ -364,9 +364,9 @@ export default class App extends React.Component {
                                 borderTopColor={'transparent'}
                                 searchIcon={<Button
                                     onClick={this.handleFriendSearch}
-                                    icon={<Icon name="search" color="#3A85D6" size={40} shadowRadius={10}/>}
+                                    icon={<Icon name="search" color="#3A85D6" size={30} shadowRadius={10}/>}
                                     buttonStyle={{
-                                        backgroundColor: "rgba(255, 255,255, 0.5)",
+                                        backgroundColor: "rgba(237, 234,252, 1)",
                                     }}
                                 />}
                                 value={friend}
